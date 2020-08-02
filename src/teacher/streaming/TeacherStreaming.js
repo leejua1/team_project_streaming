@@ -5,11 +5,11 @@ import './t-streaming.css'
 import {Link} from 'react-router-dom'
 import picklelogo from '../../assets/img/logo/Pickle_Logo.png'
 
-const teacherScreenTypes = {REQUEST: "teacherScreen/REQUEST"}
-const teacherScreenRequest = (action) => ({type: teacherScreenTypes.REQUEST, payload: action.payload})
-const teacherScreenReducer = ( state = {}, action ) => {
+const teacherStreamingTypes = {REQUEST: "teacherScreen/REQUEST"}
+const teacherStreamingRequest = (action) => ({type: teacherStreamingTypes.REQUEST, payload: action.payload})
+const teacherStreamingReducer = ( state = {}, action ) => {
     switch (action.type){
-        case teacherScreenTypes.REQUEST: return {...state, payload: action.payload}
+        case teacherStreamingTypes.REQUEST: return {...state, payload: action.payload}
         default: return state
     }
 }
@@ -123,4 +123,4 @@ export class TeacherStreaming extends Component{
     }
 }
 
-export default teacherScreenReducer;
+export default teacherStreamingReducer;
