@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-
+import '../src/assets/css/sass/themes/gogo.light.greenlime.scss'
 ReactDOM.render(
   <React.StrictMode>
     <App />
