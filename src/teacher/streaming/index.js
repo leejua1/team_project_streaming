@@ -1,2 +1,2 @@
-export {default as teacherScreenReducer, TeacherStreaming} from './TeacherStreaming'
-export {default as studentScreenReducer, StudentStreaming} from './StudentStreaming'
+export {default as teacherStreamingReducer, TeacherStreaming} from './TeacherStreaming'
+export {default as studentStreamingReducer, StudentStreaming} from './StudentStreaming'

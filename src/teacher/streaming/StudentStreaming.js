@@ -4,11 +4,11 @@ import {Button} from 'reactstrap'
 import './t-streaming.css'
 import {Link} from 'react-router-dom'
 import picklelogo from "../../assets/img/logo/Pickle_Logo.png";
-const studentScreenTypes = {REQUEST: "studentStreaming/REQUEST"}
-const studentScreenRequest = (action) => ({type: studentScreenTypes.REQUEST, payload: action.payload})
-const studentScreenReducer = ( state = {}, action ) => {
+const studentStreamingTypes = {REQUEST: "studentStreaming/REQUEST"}
+const studentStreamingRequest = (action) => ({type: studentStreamingTypes.REQUEST, payload: action.payload})
+const studentStreamingReducer = ( state = {}, action ) => {
     switch (action.type){
-        case studentScreenTypes.REQUEST: return {...state, payload: action.payload}
+        case studentStreamingTypes.REQUEST: return {...state, payload: action.payload}
         default: return state
     }
 }
@@ -35,4 +35,4 @@ export class StudentStreaming extends Component {
 }
 
 
-export default studentScreenReducer
+export default studentStreamingReducer
