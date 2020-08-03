@@ -1,6 +1,6 @@
 import React, {Suspense} from 'react';
 import {BrowserRouter as Router, Route, Redirect, Switch} from 'react-router-dom'
-import {TeacherStreaming, StudentStreaming} from "./teacher/streaming";
+import {TeacherStreaming} from "./teacher/streaming";
 import {TeacherStudentStreaming} from './student/streaming'
 
 function App() {
@@ -15,11 +15,7 @@ function App() {
                               exact
                               render={(props) => <TeacherStreaming {...props} />}
                           />
-                          <Route
-                              path="/studentstreaming"
-                              exact
-                              render={(props) => <StudentStreaming {...props} />}
-                          />
+
                           <Route
                               path="/teacherstudentstreaming"
                               exact
