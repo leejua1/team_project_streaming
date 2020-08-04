@@ -39,14 +39,14 @@ export class TeacherStudentStreaming extends React.Component {
         this.onIceCandidate = this.onIceCandidate.bind(this)
         this.onIceStateChange = this.onIceStateChange.bind(this)
         this.hangUp = this.hangUp.bind(this)
+        this.sendMessage = this.sendMessage.bind(this)
     }
 
     componentDidMount() {
-        this.socket =io('http://localhost:3100')
-        this.socket.emit('joinRoom', {roomName: "Kor0302" , userCode: "S170223"})
+        this.socket = io('http://localhost:3100')
+        this.socket.emit('joinRoom', {roomName: "Kor0302", userCode: "S170223"})
 
     }
-
 
     start = () => {
         this.setState({
@@ -62,6 +62,16 @@ export class TeacherStudentStreaming extends React.Component {
             })
             .catch(e => alert("getUserMedia() error:" + e.name));
     };
+
+    sendMessage = message=>{ //서버에 메세지로 sessionDescription을 보낸다.
+        console.log(`Client sending message : ${message}`)
+        this.socket.emit('message', message)
+    }
+
+
+
+
+
 
     gotRemoteStream = event => {
         let remoteVideo = this.remoteVideoRef.current;
@@ -107,7 +117,7 @@ export class TeacherStudentStreaming extends React.Component {
         pc1.setLocalDescription(desc)
             .then(
                 () =>
-                    console.log("pc1 setLocalDescription complete createOffer"),
+                   this.sendMessage(desc),
                 error =>
                     console.error(
                         "pc1 Failed to set session description in createOffer",

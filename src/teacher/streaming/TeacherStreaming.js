@@ -155,9 +155,7 @@ export class TeacherStreaming extends Component{
         });
         let { localStream } = this.state;
 
-        let servers = null,
-            pc1 = new RTCPeerConnection(servers),
-            pc2 = new RTCPeerConnection(servers)
+        let servers = null, pc1 = new RTCPeerConnection(servers), pc2 = new RTCPeerConnection(servers)
         pc1.onicecandidate = e => this.onIceCandidate(pc1, e)
         pc1.oniceconnectionstatechange = e => this.onIceStateChange(pc1, e)
         pc2.onicecandidate = e => this.onIceCandidate(pc2, e)

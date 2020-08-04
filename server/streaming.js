@@ -5,10 +5,9 @@ let users = []
 io.on('connection', socket=>{
     console.log(`socket is connected with client id ${socket.id}`)
 
-    socket.on('joinRoom', data=>{ //join할 roomName과 userCode를 보낸다.
-        console.log(`client join roomName ${data.roomName} userCode ${data.userCode}`)
-        socket.join(data.roomName) //각자 data로 가지고 온 roomName에 join된다.
-        users.push({socketId : data.socketId, userCode : data.userCode, roomName : data.roomName})
+    socket.on('message', data=>{ //join할 roomName과 userCode를 보낸다.
+        console.log("server recieve message")
+        socket.emit('message', data) //각자 data로 가지고 온 roomName에 join된다.
 
         })
 
