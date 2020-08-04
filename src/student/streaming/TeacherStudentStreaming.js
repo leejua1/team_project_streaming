@@ -3,6 +3,7 @@ import './s-streaming.css'
 import {Card, CardBody, CardTitle, Table} from "reactstrap";
 import {Link} from "react-router-dom";
 import picklelogo from "../../assets/img/logo/Pickle_Logo.png";
+import io from 'socket.io-client'
 
 const teacherStudentStreamingTypes = {REQUEST: "teacherStudentStreaming/REQUEST"}
 const teacherStudentStreamingRequest = (action) => ({type: teacherStudentStreamingTypes.REQUEST, payload: action.payload})
@@ -24,10 +25,11 @@ export class TeacherStudentStreaming extends React.Component {
             pc1: null,
             pc2: null,
             localStream: null,
-            socket : null
+            studentList : []
         }
         this.localVideoRef = React.createRef();
         this.remoteVideoRef = React.createRef();
+        this.socket =null
 
         this.start = this.start.bind(this)
         this.gotRemoteStream = this.gotRemoteStream.bind(this)
@@ -37,11 +39,14 @@ export class TeacherStudentStreaming extends React.Component {
         this.onIceCandidate = this.onIceCandidate.bind(this)
         this.onIceStateChange = this.onIceStateChange.bind(this)
         this.hangUp = this.hangUp.bind(this)
-
     }
 
     componentDidMount() {
+        this.socket =io('http://localhost:3100')
+        this.socket.emit('joinRoom', {roomName: "Kor0302" , userCode: "S170223"})
+
     }
+
 
     start = () => {
         this.setState({
@@ -191,14 +196,7 @@ export class TeacherStudentStreaming extends React.Component {
 
     render() {
         const lectureMeterialList = [{seq : 1,fistName : "현대문학의 이해", lastName : "수정/삭제"},{seq : 2,fistName : "고전문학의 이해", lastName : "수정/삭제"},{seq : 3,fistName : "근대문학의 이해", lastName : "수정/삭제"}]
-        const studentList = [{seq : 1,fistName : "030501", lastName : "Mary"},{seq : 2,fistName : "030502", lastName : "Carrie"},{seq : 3,fistName : "030503", lastName : "Dorothy"}
-            ,{seq : 4,fistName : "030504", lastName : "Helen"},{seq : 5,fistName : "030505", lastName : "Carol"},{seq : 6,fistName : "030506", lastName : "Betty"},{seq : 7,fistName : "030507", lastName : "Sally"}
-            ,{seq : 8,fistName : "030508", lastName : "Susan"},{seq : 9,fistName : "030509", lastName : "Shirley"},{seq : 10,fistName : "030510", lastName : "Diane"},{seq : 11,fistName : "030511", lastName : "Anna"},
-            {seq : 12,fistName : "030512", lastName : "Elizabeth"},{seq : 13,fistName : "030513", lastName : "Margaret"},{seq : 14,fistName : "030514", lastName : "Clara"}
-            ,{seq : 15,fistName : "030515", lastName : "Annie"},{seq : 16,fistName : "030516", lastName : "Grace"},{seq : 17,fistName : "030517", lastName : "Nancy"},
-            {seq : 18,fistName : "030518", lastName : "Frank"},{seq : 19,fistName : "030519", lastName : "Dennis"},{seq : 20,fistName : "030520", lastName : "Donald"},
-            {seq : 21,fistName : "030521", lastName : "Athur"},{seq : 22,fistName : "030522", lastName : "Edward"},{seq : 23,fistName : "030523", lastName : "Harry"},
-            {seq : 24,fistName : "030524", lastName : "Peter"},{seq : 25,fistName : "030525", lastName : "Richard"}]
+
         const { startDisabled, callDisabled, hangUpDisabled } = this.state;
         return (
                 <>
@@ -233,7 +231,7 @@ export class TeacherStudentStreaming extends React.Component {
                                                     </tr>
                                                     </thead>
                                                     <tbody>
-                                                    {studentList && studentList.map(student=><tr>
+                                                    {this.state.studentList && this.state.studentList.map(student=><tr>
                                                         <th scope="row">{student.seq}</th>
                                                         <td>{student.fistName}</td>
                                                         <td>{student.lastName}</td>

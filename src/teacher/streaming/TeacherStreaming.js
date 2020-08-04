@@ -4,6 +4,7 @@ import {Table, Card, CardBody, CardTitle, Button} from "reactstrap";
 import './t-streaming.css'
 import {Link} from 'react-router-dom'
 import picklelogo from '../../assets/img/logo/Pickle_Logo.png'
+import io from 'socket.io-client'
 
 
 const teacherStreamingTypes = {REQUEST: "teacherScreen/REQUEST"}
@@ -63,13 +64,12 @@ export class TeacherStreaming extends Component{
             servers: null,
             pc1: null,
             pc2: null,
-            localStream: null,
-            socket : null,
+            localStream: null
         }
 
         this.localVideoRef = React.createRef();
         this.remoteVideoRef = React.createRef();
-
+        this.socket = null
         this.nextPage = this.nextPage.bind(this)
         this.prevPage = this.prevPage.bind(this)
       /*  this.start = this.start.bind(this)*/
@@ -83,20 +83,39 @@ export class TeacherStreaming extends Component{
     }
 
     componentDidMount() {
+        this.socket = io('http://localhost:3100')
+        this.socket.emit('joinRoom', {roomName : "Kor0302", userCode: "T170223"}) //props로 들어온다.
         this.setState({
             startDisabled: true
-        });
+        })
         navigator.mediaDevices.getUserMedia({video : true})
             .then(stream=>{
                 this.localVideoRef.current.srcObject = stream;
                 this.setState({
                     callDisabled: false,
                     localStream: stream
-                });
+                })
             })
-            .catch(e => alert("getUserMedia() error:" + e.name));
+            .catch(e => alert("getUserMedia() error:" + e.name))
         this.setState({nowPageProps:  this.state.videoProps.slice(0,6)})
+        this.socket.on('studentList', ()=>{
+            this.addStudentList()
+        })
     }
+
+    addStudentList = ()=>{
+        console.log("addStudentList 실행")
+        this.setState({studentList : [  {seq : 1,fistName : "030501", lastName : "Mary"},{seq : 2,fistName : "030502", lastName : "Carrie"},{seq : 3,fistName : "030503", lastName : "Dorothy"}
+                ,{seq : 4,fistName : "030504", lastName : "Helen"},{seq : 5,fistName : "030505", lastName : "Carol"},{seq : 6,fistName : "030506", lastName : "Betty"},{seq : 7,fistName : "030507", lastName : "Sally"}
+                ,{seq : 8,fistName : "030508", lastName : "Susan"},{seq : 9,fistName : "030509", lastName : "Shirley"},{seq : 10,fistName : "030510", lastName : "Diane"},{seq : 11,fistName : "030511", lastName : "Anna"},
+                {seq : 12,fistName : "030512", lastName : "Elizabeth"},{seq : 13,fistName : "030513", lastName : "Margaret"},{seq : 14,fistName : "030514", lastName : "Clara"}
+                ,{seq : 15,fistName : "030515", lastName : "Annie"},{seq : 16,fistName : "030516", lastName : "Grace"},{seq : 17,fistName : "030517", lastName : "Nancy"},
+                {seq : 18,fistName : "030518", lastName : "Frank"},{seq : 19,fistName : "030519", lastName : "Dennis"},{seq : 20,fistName : "030520", lastName : "Donald"},
+                {seq : 21,fistName : "030521", lastName : "Athur"},{seq : 22,fistName : "030522", lastName : "Edward"},{seq : 23,fistName : "030523", lastName : "Harry"},
+                {seq : 24,fistName : "030524", lastName : "Peter"},{seq : 25,fistName : "030525", lastName : "Richard"}]})
+
+    }
+
 
     nextPage(){
        this.setState({nowPageProps :  this.state.videoProps.slice((this.state.nowPage+1)*6,(this.state.nowPage+1)*6+6),nowPage : this.state.nowPage+1})

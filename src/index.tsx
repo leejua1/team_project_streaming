@@ -4,7 +4,6 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import '../src/assets/css/sass/themes/gogo.light.greenlime.scss'
-import MyComponent from "./teacher/streaming/swipe";
 
 ReactDOM.render(
   <React.StrictMode>
