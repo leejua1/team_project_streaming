@@ -66,8 +66,8 @@ class PcClient extends Component {
     createPeerConnection(){
         try {
             let pc = new RTCPeerConnection(this.state.pcConfig)
-            pc.onicecandidate = e => this.handleIceCandidate(pc,e);
-            pc.onaddstream = e => this.handleRemoteStreamAdded(pc,e);
+            pc.onicecandidate = e => this.handleIceCandidate(pc,e); //여기서 문제있음 비동기처리??
+
         }
         catch (e) {
             console.log(`Failed to create PeerConnection, exception ${e.message}` )
