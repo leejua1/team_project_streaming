@@ -7,14 +7,15 @@ class PcClient extends Component {
             remoteStream : null,
             pcConfig : {'iceServers' : [{urls: 'stun:stun.l.google.com:19302'},
                     {urls:  'turn:numb.viagenie.ca', credential : "muazkh", username : "webrtc@live.com"}]},
-            pc : null
+            pc : null,
+            isStarted : false
         }
         this.localVideo = createRef()
         this.remoteVideo = createRef()
         this.maybeStart = this.maybeStart.bind(this)
         this.handleIceCandidate = this.handleIceCandidate.bind(this)
         this.createPeerConnection = this.createPeerConnection.bind(this)
-       /*   this.sendMessage = this.sendMessage.bind(this)*/
+        this.sendMessage = this.sendMessage.bind(this)
         this.doCall = this.doCall.bind(this)
         this.setLocalAndSendMessage = this.setLocalAndSendMessage.bind(this)
         this.onCreateSessionDescriptionError = this.onCreateSessionDescriptionError.bind(this)
@@ -46,8 +47,12 @@ class PcClient extends Component {
 
         })*/
     }
-
+        sendMessage (message){
+        console.log(`send message to server ${message.type}`)
+        this.socket.emit('message', message)
+}
     componentDidMount() {
+        this.socket.emit("create or join", "room")
    /*     this.socket = io('http://localhost:3100/')*/
         navigator.mediaDevices.getUserMedia({
             video : true
@@ -58,7 +63,10 @@ class PcClient extends Component {
                 /*(1)*/
                 this.sendMessage('got user media')
             })
-
+        this.socket.on('ready', ()=>{
+            console.log('ready to offer')
+            this.setState({isStarted : true})
+        })
 
         //서버에서 받아온다.
        this.socket.on('message',(message)=>{
@@ -68,7 +76,8 @@ class PcClient extends Component {
                this.maybeStart()
            } else if (message.type ==='offer'){
                 let {pc } = this.state
-                pc.setRemoteDescription(new RTCSessionDescription(message))
+                pc.setRemoteDescription(new RTCSessionDescription(message)).then(r =>
+                {console.log("set creamote description success")})
                 this.doAnswer()
             }
             else if (message.type ==='answer'){
@@ -88,23 +97,21 @@ class PcClient extends Component {
 
         })
     }
-    sendMessage(message){
-        console.log('client sending message ', message)
-        this.socket.emit('message', message)
-    }
+
 /*(3)*/
     maybeStart(){
         let {pc, localStream} = this.state
-        console.log("maybeStart")
-        if (typeof localStream !== 'undefined'){
+        console.log(`maybeStart ${this.state.isStarted}`)
+        if (this.state.isStarted && typeof localStream !== undefined){
             pc = new RTCPeerConnection(this.state.pcConfig)
             localStream
                 .getTracks()
                 .forEach(track => pc.addTrack(track, localStream))
+            this.setState({pc})
+            this.createPeerConnection()
+            this.doCall()
         }
-        this.setState({pc})
-        this.createPeerConnection()
-        this.doCall()
+
         }
 
     createPeerConnection(){
