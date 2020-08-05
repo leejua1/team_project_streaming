@@ -14,7 +14,6 @@ class PcClient extends Component {
         this.remoteVideo = createRef()
         this.maybeStart = this.maybeStart.bind(this)
         this.handleIceCandidate = this.handleIceCandidate.bind(this)
-        this.createPeerConnection = this.createPeerConnection.bind(this)
         this.sendMessage = this.sendMessage.bind(this)
         this.doCall = this.doCall.bind(this)
         this.setLocalAndSendMessage = this.setLocalAndSendMessage.bind(this)
@@ -107,26 +106,14 @@ class PcClient extends Component {
                 .getTracks()
                 .forEach(track => pc.addTrack(track, localStream))
             this.setState({pc})
-            this.doCall()
-            this.createPeerConnection()
-
-        }
-
-        }
-
-    createPeerConnection(){
-        try {
-            let {pc} = this.state
-            console.log("createPeerConnection")
-            pc.onicecandidate = e => this.handleIceCandidate(e); //여기서 문제있음 비동기처리??
+            pc.onicecandidate = e => pc.addIceCandidate(e.candidate); //여기서 문제있음 비동기처리??
             pc.ontrack = e => this.handleRemoteStreamAdded(e)
+            this.doCall()
         }
-        catch (e) {
-            console.log(`Failed to create PeerConnection, exception ${e.message}` )
         }
-    }
+
+
     handleIceCandidate(event){
-        let {pc} = this.state
         console.log("handleIceCandidate")
 
         if (event.candidate){
