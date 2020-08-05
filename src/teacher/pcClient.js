@@ -74,6 +74,7 @@ class PcClient extends Component {
            if (message ==='got user media'){
                console.log("client receive message got user media from server ")
            } else if (message.type ==='offer'){
+               this.maybeStart()
                 let {pc } = this.state
                 pc.setRemoteDescription(new RTCSessionDescription(message))
                 this.doAnswer()
@@ -106,9 +107,10 @@ class PcClient extends Component {
                 .getTracks()
                 .forEach(track => pc.addTrack(track, localStream))
             this.setState({pc})
-            pc.onicecandidate = e => pc.addIceCandidate(e.candidate); //여기서 문제있음 비동기처리??
+            pc.onicecandidate = e => this.handleIceCandidate(e);//얘네 둘은 즉시 실행되는게 아니라 doCall로 통신이 일어난 후에실행되는것같다.
             pc.ontrack = e => this.handleRemoteStreamAdded(e)
             this.doCall()
+
         }
         }
 
@@ -146,7 +148,7 @@ class PcClient extends Component {
     setLocalAndSendMessage(sessionDescription){
         let {pc} = this.state
         pc.setLocalDescription(sessionDescription)
-        this.sendMessage(sessionDescription) //여기에서 offer message를 보낸다.
+        this.sendMessage({name : "caller", target :"callee", type : "offer", sdp : pc.localDescription}) //여기에서 offer message를 보낸다.
     }
     handleCreateOfferError(error){
         console.log("error in handleCreateOfferError")
