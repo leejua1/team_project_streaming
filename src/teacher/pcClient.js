@@ -131,9 +131,9 @@ class PcClient extends Component {
             })
         }
     }
-    handleRemoteStreamAdded(pc,event){
+    handleRemoteStreamAdded(event){
         this.setState({remoteStream : event.stream})
-        this.remoteVideo.srcObject = this.state.remoteStream
+        this.remoteVideo.current.srcObject = this.state.remoteStream
     }
     doCall(){
         let {pc} = this.state
