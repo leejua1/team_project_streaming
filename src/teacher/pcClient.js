@@ -66,6 +66,7 @@ class PcClient extends Component {
         this.socket.on('ready', ()=>{
             console.log('ready to offer')
             this.setState({isStarted : true})
+            this.maybeStart()
         })
 
         //서버에서 받아온다.
@@ -73,11 +74,9 @@ class PcClient extends Component {
            /*(2)*/
            if (message ==='got user media'){
                console.log("client receive message got user media from server ")
-               this.maybeStart()
            } else if (message.type ==='offer'){
                 let {pc } = this.state
-                pc.setRemoteDescription(new RTCSessionDescription(message)).then(r =>
-                {console.log("set creamote description success")})
+                pc.setRemoteDescription(new RTCSessionDescription(message))
                 this.doAnswer()
             }
             else if (message.type ==='answer'){
@@ -108,8 +107,9 @@ class PcClient extends Component {
                 .getTracks()
                 .forEach(track => pc.addTrack(track, localStream))
             this.setState({pc})
-            this.createPeerConnection()
             this.doCall()
+            this.createPeerConnection()
+
         }
 
         }
@@ -144,7 +144,7 @@ class PcClient extends Component {
     }
     doCall(){
         let {pc} = this.state
-        pc.createOffer().then(
+        pc.createOffer({offerToReceiveAudio: 1, offerToReceiveVideo: 1}).then(
             this.setLocalAndSendMessage,
             this.handleCreateOfferError
         )
