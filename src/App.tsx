@@ -8,8 +8,8 @@ function App() {
   return (
       <div className="h-100">
           <>
-              <PcClient/>
-       {/*       <Suspense fallback={<div className="loading"/>}>
+<PcClient/>
+       {/*   <Suspense fallback={<div className="loading"/>}>
                   <Router>
                       <Switch>
                           <Route

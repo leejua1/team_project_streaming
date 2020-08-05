@@ -83,8 +83,8 @@ export class TeacherStreaming extends Component{
     }
 
     componentDidMount() {
-        this.socket = io('http://localhost:3100')
-        this.socket.emit('joinRoom', {roomName : "Kor0302", userCode: "T170223"}) //props로 들어온다.
+      //  this.socket = io('http://localhost:3100')
+       // this.socket.emit('joinRoom', {roomName : "Kor0302", userCode: "T170223"}) //props로 들어온다.
         this.setState({
             startDisabled: true
         })
@@ -98,9 +98,9 @@ export class TeacherStreaming extends Component{
             })
             .catch(e => alert("getUserMedia() error:" + e.name))
         this.setState({nowPageProps:  this.state.videoProps.slice(0,6)})
-        this.socket.on('studentList', ()=>{
-            this.addStudentList()
-        })
+     //   this.socket.on('studentList', ()=>{
+       //     this.addStudentList()
+        //})
     }
 
     addStudentList = ()=>{
@@ -240,6 +240,7 @@ export class TeacherStreaming extends Component{
     }
 
     onIceCandidate = (pc, event) => {
+        console.log("onIceCandidate")
         let { pc1, pc2 } = this.state;
         let otherPc = pc === pc1 ? pc2 : pc1;
         otherPc.addIceCandidate(event.candidate)
