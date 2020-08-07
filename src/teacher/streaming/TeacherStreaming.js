@@ -274,7 +274,6 @@ export class TeacherStreaming extends Component{
         return (
             <>
                 <div style={{textAlign : "center"}}>
-            <Link to="/home"><img src={picklelogo}/></Link>
                 </div>
                 <button onClick={this.call} disabled={this.state.callDisabled}>
                     Call{" "}
