@@ -72,7 +72,7 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
         this.localVideoRef = React.createRef();
         this.remoteVideoRef1 = React.createRef();
         this.remoteVideoRef2 = React.createRef();
-        this.socket = io.connect('http://localhost:3100/')
+        this.socket = io.connect('https://secret-dawn-11778.herokuapp.com/')
         this.nextPage = this.nextPage.bind(this)
         this.prevPage = this.prevPage.bind(this)
         this.offer = this.offer.bind(this)
@@ -86,7 +86,7 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
                 this.setState({localStream: stream})
             })
         this.setState({nowPageProps:  this.state.videoProps.slice(0,6)})
-        this.socket.emit('joinRoom',"Kor112")
+        this.socket.emit('joinRoom', {roomName : "Kor112", })
         this.socket.on('letOffer',studentCode=>{
             console.log('receive start offer message from server')
             this.offer(studentCode)

@@ -6,6 +6,7 @@ io.on('connection', socket=> {
     console.log(`socket is connected with client id ${socket.id}`)
 
     socket.on('joinRoom', room=> {
+        let teacherId = ""
         //client에서 넘어온 data에서
         console.log("client connect")
         const clientsInRoom = io.sockets.adapter.rooms[room];
@@ -14,10 +15,13 @@ io.on('connection', socket=> {
         if (numClient === 0) {
             socket.join(room)
             console.log(`first client join roomName ${room} socketid ${socket.id}`)
+            teacherId =  socket.id
+            console.log(`전역으로 저장된 교사아이디 ${teacherId}`)
         } else { //학생이 한명씩 들어올 때마다
             socket.join(room) //room에 join 되고
             console.log(`second client join roomName ${room} socketid ${socket.id}`)
-            socket.to(`선생님 소켓 아이디`).emit('letOffer')// caller에게 offer를 하라고 시킨다. 그러려면 선생님의 소켓아이디를 서버에서 가지고 있어야한다...
+            socket.to(teacherId).emit('letOffer')// caller에게 offer를 하라고 시킨다.  전역으로 저장된 선생님의 socket id를 이용
+
         }
     })
     socket.on('message',message=>{

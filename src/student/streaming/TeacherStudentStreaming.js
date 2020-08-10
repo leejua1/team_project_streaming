@@ -27,7 +27,7 @@ export class TeacherStudentStreaming extends React.Component {
         }
         this.localVideoRef = React.createRef();
         this.remoteVideoRef = React.createRef();
-        this.socket = io.connect('http://localhost:3100/')
+        this.socket = io.connect('https://secret-dawn-11778.herokuapp.com/')
         this.sendMessage = this.sendMessage.bind(this)
         this.handleOffer = this.handleOffer.bind(this)
         this.handleRemoteStreamAdded = this.handleRemoteStreamAdded.bind(this)
