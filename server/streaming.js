@@ -1,9 +1,7 @@
 
-const io = require('socket.io').listen(process.env.PORT ,(res)=>{
-    res.header('Access-Control-Allow-Origin', '*');
+const io = require('socket.io').listen(3100 ,()=>{
     console.log('server is running on port 3100')
 })
-let roomName = ""
 io.on('connection', socket=> {
     console.log(`socket is connected with client id ${socket.id}`)
 
