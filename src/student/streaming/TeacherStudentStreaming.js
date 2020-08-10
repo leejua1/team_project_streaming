@@ -23,7 +23,9 @@ export class TeacherStudentStreaming extends React.Component {
             remoteStream : null,
             config : {'iceServers' : [{urls: 'stun:stun.l.google.com:19302'},
                     {urls:  'turn:numb.viagenie.ca', credential : "muazkh", username : "webrtc@live.com"}]},
-            studentList : []
+            studentList : [],
+            classCode : "Kor112",
+            studentCode : "S00112"
         }
         this.localVideoRef = React.createRef();
         this.remoteVideoRef = React.createRef();
@@ -40,7 +42,7 @@ export class TeacherStudentStreaming extends React.Component {
             this.localVideoRef.current.srcObject = stream
             this.setState({localStream : stream})
         })
-        this.socket.emit('joinRoom', {roomName : "Kor112"})
+        this.socket.emit('joinRoom', {roomName : this.state.classCode, code : this.state.studentCode})
         this.socket.on('recOffer', message=>{
             console.log(`receive offer from teacher`)
             this.handleOffer(message)
@@ -67,8 +69,8 @@ export class TeacherStudentStreaming extends React.Component {
                 peer.createAnswer().then(answer=>{
                     peer.setLocalDescription(answer).then(()=>{
                         this.sendMessage({
-                            name : "studentCode",
-                            target : "teacherCode",
+                            name : message.student,
+                            target : message.teacher,
                             type : "answer",
                             sdp : peer.localDescription
                         })
@@ -100,7 +102,6 @@ export class TeacherStudentStreaming extends React.Component {
     }
     render() {
         const lectureMeterialList = [{seq : 1,fistName : "현대문학의 이해", lastName : "수정/삭제"},{seq : 2,fistName : "고전문학의 이해", lastName : "수정/삭제"},{seq : 3,fistName : "근대문학의 이해", lastName : "수정/삭제"}]
-
         return (
                 <>
                     <div style={{textAlign : "center"}}>

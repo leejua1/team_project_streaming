@@ -66,8 +66,8 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
             pcConfig : {'iceServers' : [{urls: 'stun:stun.l.google.com:19302'},
                     {urls:  'turn:numb.viagenie.ca', credential : "muazkh", username : "webrtc@live.com"}]},
             count : 0,
-            classCode : "",
-            teacherCode : ""
+            classCode : "Kor112",
+            teacherCode :"T111223"
         }
         this.localVideoRef = React.createRef();
         this.remoteVideoRef1 = React.createRef();
@@ -86,10 +86,14 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
                 this.setState({localStream: stream})
             })
         this.setState({nowPageProps:  this.state.videoProps.slice(0,6)})
-        this.socket.emit('joinRoom', {roomName : "Kor112"})
-        this.socket.on('letOffer',studentCode=>{
+
+
+        this.socket.emit('joinRoom', {roomName : this.state.classCode, code: this.state.teacherCode}) //state에 저장된 classCode와 teacherCode가 서버로 보내진다.
+
+
+        this.socket.on('letOffer',studentData=>{
             console.log('receive start offer message from server')
-            this.offer(studentCode)
+            this.offer(studentData)
         })
         this.socket.on('recAnswer', message=>{
             if(message.target ==="???") {
@@ -119,7 +123,7 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
             })
 
     }
-    offer(studentCode){
+    offer(studentData){
         let {localStream, count} = this.state
         console.log("offer")
         count++
@@ -132,7 +136,7 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
                 if (e.candidate){
                     this.sendMessage({
                         type : "candidate",
-                        target : studentCode,
+                        target : studentData.id,
                         candidate : e.candidate
                     })
                 }
@@ -151,8 +155,8 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
                 })
                     .then(()=>{
                         this.sendMessage({
-                            name : "state에 저장된 선생코드",
-                            target :studentCode,
+                            name : studentData.teacher,
+                            target :studentData.student,
                             type : "offer",
                             sdp : peer1.localDescription
                         })
@@ -166,7 +170,7 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
                     if (e.candidate){
                         this.sendMessage({
                             type : "candidate",
-                            target : "parameter로 들어온 studentCode",
+                            target : studentData.id,
                             candidate : e.candidate
                         })
                     }
