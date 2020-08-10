@@ -40,7 +40,9 @@ export class TeacherStudentStreaming extends React.Component {
             this.localVideoRef.current.srcObject = stream
             this.setState({localStream : stream})
         })
+        this.socket.emit('joinRoom', {roomName : "Kor112"})
         this.socket.on('recOffer', message=>{
+            console.log(`receive offer from teacher`)
             this.handleOffer(message)
         })
         this.socket.on('recCandidate', message=>{

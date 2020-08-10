@@ -86,7 +86,7 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
                 this.setState({localStream: stream})
             })
         this.setState({nowPageProps:  this.state.videoProps.slice(0,6)})
-        this.socket.emit('joinRoom', {roomName : "Kor112", })
+        this.socket.emit('joinRoom', {roomName : "Kor112"})
         this.socket.on('letOffer',studentCode=>{
             console.log('receive start offer message from server')
             this.offer(studentCode)
