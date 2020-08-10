@@ -16,7 +16,7 @@ export const teacherStreamingReducer = ( state = {}, action ) => {
     }
 }
 
-export class TeacherStreaming extends Component{
+export class TeacherStreaming extends Component{ //필요한것... 수업코드, 학생코드, 선생코드, 수업디테일이 일단 들어왔다고 생각하자.
     constructor(props) {
         super(props);
         this.state = {
@@ -58,217 +58,170 @@ export class TeacherStreaming extends Component{
             nowPage : 0,
             noPrev : false,
             noNext : false,
-            startDisabled: false,
-            callDisabled: true,
-            hangUpDisabled: true,
-            servers: null,
-            pc1: null,
-            pc2: null,
-            localStream: null
+            peer1: null,
+            peer2: null,
+            localStream: null,
+            remoteStream1 : null,
+            remoteStream2 : null,
+            pcConfig : {'iceServers' : [{urls: 'stun:stun.l.google.com:19302'},
+                    {urls:  'turn:numb.viagenie.ca', credential : "muazkh", username : "webrtc@live.com"}]},
+            count : 0,
+            classCode : "",
+            teacherCode : ""
         }
-
         this.localVideoRef = React.createRef();
-        this.remoteVideoRef = React.createRef();
+        this.remoteVideoRef1 = React.createRef();
+        this.remoteVideoRef2 = React.createRef();
         this.socket = null
         this.nextPage = this.nextPage.bind(this)
         this.prevPage = this.prevPage.bind(this)
-      /*  this.start = this.start.bind(this)*/
-        this.gotRemoteStream = this.gotRemoteStream.bind(this)
-        this.call = this.call.bind(this)
-        this.onCreateOfferSuccess = this.onCreateOfferSuccess.bind(this)
-        this.onCreateAnswerSuccess = this.onCreateAnswerSuccess.bind(this)
-        this.onIceCandidate = this.onIceCandidate.bind(this)
-        this.onIceStateChange = this.onIceStateChange.bind(this)
-        this.hangUp = this.hangUp.bind(this)
+        this.offer = this.offer.bind(this)
+        this.handleNewICECandidateMsg = this.handleNewICECandidateMsg.bind(this)
     }
 
     componentDidMount() {
-      //  this.socket = io('http://localhost:3100')
-       // this.socket.emit('joinRoom', {roomName : "Kor0302", userCode: "T170223"}) //props로 들어온다.
-        this.setState({
-            startDisabled: true
-        })
         navigator.mediaDevices.getUserMedia({video : true})
             .then(stream=>{
                 this.localVideoRef.current.srcObject = stream;
-                this.setState({
-                    callDisabled: false,
-                    localStream: stream
-                })
+                this.setState({localStream: stream})
             })
-            .catch(e => alert("getUserMedia() error:" + e.name))
         this.setState({nowPageProps:  this.state.videoProps.slice(0,6)})
-     //   this.socket.on('studentList', ()=>{
-       //     this.addStudentList()
-        //})
+        this.socket.emit('joinRoom')
+        this.socket.on('letOffer',studentCode=>{
+            console.log('receive start offer message from server')
+            this.offer(studentCode)
+        })
+        this.socket.on('recAnswer', message=>{
+            if(message.target ==="???") {
+                let {peer1} = this.state
+                peer1.setRemoteDescription(new RTCSessionDescription(message.sdp)).then(r =>
+                    console.log(`remoteDescription setting success`))
+                this.setState({peer1})
+            }else if (message.target === "???"){
+                let {peer2} = this.state
+                peer2.setRemoteDescription(new RTCSessionDescription(message.sdp)).then(()=>
+                    console.log(`remoteDescription setting success`))
+                this.setState({peer2})
+            }
+        })
+        this.socket.on('recCandidate', message=>{
+            if(message.target ==="???") {
+                const {peer1} = this.state
+                peer1.addIceCandidate(new RTCIceCandidate(message.candidate)).then(r =>
+                    console.log('success icecandidate added'))
+                    .catch(e=>console.log(e))
+            }else if(message.target ==="???"){
+                const {peer2} = this.state
+                peer2.addIceCandidate(new RTCIceCandidate(message.candidate)).then(r =>
+                    console.log('success icecandidate added'))
+                    .catch(e=>console.log(e))
+            }
+            })
+
     }
-
-    addStudentList = ()=>{
-        console.log("addStudentList 실행")
-        this.setState({studentList : [  {seq : 1,fistName : "030501", lastName : "Mary"},{seq : 2,fistName : "030502", lastName : "Carrie"},{seq : 3,fistName : "030503", lastName : "Dorothy"}
-                ,{seq : 4,fistName : "030504", lastName : "Helen"},{seq : 5,fistName : "030505", lastName : "Carol"},{seq : 6,fistName : "030506", lastName : "Betty"},{seq : 7,fistName : "030507", lastName : "Sally"}
-                ,{seq : 8,fistName : "030508", lastName : "Susan"},{seq : 9,fistName : "030509", lastName : "Shirley"},{seq : 10,fistName : "030510", lastName : "Diane"},{seq : 11,fistName : "030511", lastName : "Anna"},
-                {seq : 12,fistName : "030512", lastName : "Elizabeth"},{seq : 13,fistName : "030513", lastName : "Margaret"},{seq : 14,fistName : "030514", lastName : "Clara"}
-                ,{seq : 15,fistName : "030515", lastName : "Annie"},{seq : 16,fistName : "030516", lastName : "Grace"},{seq : 17,fistName : "030517", lastName : "Nancy"},
-                {seq : 18,fistName : "030518", lastName : "Frank"},{seq : 19,fistName : "030519", lastName : "Dennis"},{seq : 20,fistName : "030520", lastName : "Donald"},
-                {seq : 21,fistName : "030521", lastName : "Athur"},{seq : 22,fistName : "030522", lastName : "Edward"},{seq : 23,fistName : "030523", lastName : "Harry"},
-                {seq : 24,fistName : "030524", lastName : "Peter"},{seq : 25,fistName : "030525", lastName : "Richard"}]})
-
+    offer(studentCode){
+        let {localStream, count} = this.state
+        console.log("offer")
+        count++
+        switch (count) {
+            case 0:
+                let {peer1} = this.state
+                peer1 = new RTCPeerConnection(this.state.config)
+                localStream.getTracks().forEach(track => peer1.addTrack(track,localStream))
+                peer1.onicecandidate =  e => {
+                if (e.candidate){
+                    this.sendMessage({
+                        type : "candidate",
+                        target : studentCode,
+                        candidate : e.candidate
+                    })
+                }
+            }
+                peer1.ontrack = e=>  {
+                console.log('remote stream added on track')
+                if (e.streams[0]){
+                    this.remoteVideoRef1.current.srcObject =e.streams[0]
+                }
+            }
+                peer1.createOffer().then(offer=>{
+                    peer1.setLocalDescription(offer)
+                        .then(()=>{
+                            console.log("peer1 set local description success")
+                        })
+                })
+                    .then(()=>{
+                        this.sendMessage({
+                            name : "state에 저장된 선생코드",
+                            target :studentCode,
+                            type : "offer",
+                            sdp : peer1.localDescription
+                        })
+                    })
+                break;
+            case 1:
+                let {peer2} = this.state
+                peer2 = new RTCPeerConnection(this.state.config)
+                localStream.getTracks().forEach(track => peer2.addTrack(track,localStream))
+                peer2.onicecandidate = e => {
+                    if (e.candidate){
+                        this.sendMessage({
+                            type : "candidate",
+                            target : "parameter로 들어온 studentCode",
+                            candidate : e.candidate
+                        })
+                    }
+                }
+                peer2.ontrack = e=>{
+                    console.log('remote stream added on track')
+                    if (e.streams[0]){
+                        this.remoteVideoRef2.current.srcObject =e.streams[0]
+                    }
+                }
+                peer2.createOffer().then(offer=>{
+                    peer2.setLocalDescription(offer)
+                        .then(()=>{
+                            console.log("peer1 set local description success")
+                        })
+                })
+                    .then(()=>{
+                        this.sendMessage({
+                            name : "state에 저장된 선생코드",
+                            target : "payload로 넘어온 connected학생코드",
+                            type : "offer",
+                            sdp : peer2.localDescription
+                        })
+                    })
+        }
     }
-
-
+/*    handleICECandidateEvent(peer, e){
+        if (e.candidate){
+            this.sendMessage({
+                type : "candidate",
+                target : "studentCode",
+                candidate : e.candidate
+            })
+        }
+    }
+    handleRemoteStreamAdded(event){
+        console.log('remote stream added on track')
+        if (event.streams[0]){
+            this.remoteVideo.current.srcObject =event.streams[0]
+        }
+    }*/
     nextPage(){
        this.setState({nowPageProps :  this.state.videoProps.slice((this.state.nowPage+1)*6,(this.state.nowPage+1)*6+6),nowPage : this.state.nowPage+1})
     }
-
     prevPage(){
         this.setState({nowPageProps :  this.state.videoProps.slice((this.state.nowPage-1)*6,(this.state.nowPage-1)*6+6), nowPage : this.state.nowPage-1})
     }
-
-/*    start = () => {
-        this.setState({
-            startDisabled: true
-        });
-        navigator.mediaDevices.getUserMedia({video : true})
-            .then(stream=>{
-                this.localVideoRef.current.srcObject = stream;
-                this.setState({
-                    callDisabled: false,
-                    localStream: stream
-                });
-            })
-            .catch(e => alert("getUserMedia() error:" + e.name));
-    };*/
-
-    gotRemoteStream = event => {
-        let remoteVideo = this.remoteVideoRef.current;
-        if (remoteVideo.srcObject !== event.streams[0]) {
-            remoteVideo.srcObject = event.streams[0];
-        }
+    handleNewICECandidateMsg(message){
+        console.log(`addicecandidate ${message.target}`)
+            let {peer} = this.state
+        peer.addIceCandidate(new RTCIceCandidate(message.candidate)).then(r =>
+                console.log('success icecandidate added'))
+                .catch(e=>console.log(e))
     }
 
-
-    call = () => {
-        this.setState({
-            callDisabled: true,
-            hangUpDisabled: false
-        });
-        let { localStream } = this.state;
-
-        let servers = null, pc1 = new RTCPeerConnection(servers), pc2 = new RTCPeerConnection(servers)
-        pc1.onicecandidate = e => this.onIceCandidate(pc1, e)
-        pc1.oniceconnectionstatechange = e => this.onIceStateChange(pc1, e)
-        pc2.onicecandidate = e => this.onIceCandidate(pc2, e)
-        pc2.oniceconnectionstatechange = e => this.onIceStateChange(pc2, e)
-        pc2.ontrack = e=>this.gotRemoteStream(e)
-        localStream
-            .getTracks()
-            .forEach(track => pc1.addTrack(track, localStream))
-        pc1
-            .createOffer({offerToReceiveAudio: 1, offerToReceiveVideo: 1})
-            .then(this.onCreateOfferSuccess, error =>
-                console.error("Failed to create session description", error.toString()))
-        console.log("servers after call", servers)
-        this.setState({
-            servers,
-            pc1,
-            pc2,
-            localStream
-        })
-    }
-
-    onCreateOfferSuccess = desc => {
-        let { pc1, pc2} = this.state;
-        pc1.setLocalDescription(desc)
-            .then(
-                () =>
-                    console.log("pc1 setLocalDescription complete createOffer"),
-                error =>
-                    console.error(
-                        "pc1 Failed to set session description in createOffer",
-                        error.toString()
-                    )
-            )
-
-        pc2.setRemoteDescription(desc).then(
-            () => {
-                console.log("pc2 setRemoteDescription complete createOffer");
-                pc2
-                    .createAnswer()
-                    .then(this.onCreateAnswerSuccess, error =>
-                        console.error(
-                            "pc2 Failed to set session description in createAnswer",
-                            error.toString()
-                        )
-                    );
-            },
-            error =>
-                console.error(
-                    "pc2 Failed to set session description in createOffer",
-                    error.toString()
-                )
-        )
-    }
-
-    onCreateAnswerSuccess = desc => {
-        let { pc1, pc2 } = this.state
-
-        pc1.setRemoteDescription(desc).then(
-            () => {
-                console.log("pc1 setRemoteDescription complete createAnswer");
-                console.log("servers after createAnswer", this.state.servers);
-            },
-            error =>
-                console.error(
-                    "pc1 Failed to set session description in onCreateAnswer",
-                    error.toString()
-                )
-        )
-
-        pc2.setLocalDescription(desc)
-            .then(
-                () =>
-                    console.log(
-                        "pc2 setLocalDescription complete createAnswer"
-                    ),
-                error =>
-                    console.error(
-                        "pc2 Failed to set session description in onCreateAnswer",
-                        error.toString()
-                    )
-            )
-    }
-
-    onIceCandidate = (pc, event) => {
-        console.log("onIceCandidate")
-        let { pc1, pc2 } = this.state;
-        let otherPc = pc === pc1 ? pc2 : pc1;
-        otherPc.addIceCandidate(event.candidate)
-            .then(
-                () => console.log("addIceCandidate success"),
-                error =>
-                    console.error(
-                        "failed to add ICE Candidate",
-                        error.toString()
-                    )
-            )
-    }
-
-    onIceStateChange = (pc, event) => {
-        console.log("ICE state:", pc.iceConnectionState)
-    }
-
-    hangUp = () => {
-        let { pc1, pc2 } = this.state;
-        pc1.close();
-        pc2.close();
-        this.setState({
-            pc1: null,
-            pc2: null,
-            hangUpDisabled: true,
-            callDisabled: false
-        })
-    }
 
     render() {
         return (

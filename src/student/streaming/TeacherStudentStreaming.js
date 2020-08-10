@@ -28,6 +28,11 @@ export class TeacherStudentStreaming extends React.Component {
         this.localVideoRef = React.createRef();
         this.remoteVideoRef = React.createRef();
         this.socket =null
+        this.sendMessage = this.sendMessage.bind(this)
+        this.handleOffer = this.handleOffer.bind(this)
+        this.handleRemoteStreamAdded = this.handleRemoteStreamAdded.bind(this)
+        this.handleICECandidate = this.handleICECandidate.bind(this)
+        this.handleNewICECandidateMsg = this.handleNewICECandidateMsg.bind(this)
     }
     componentDidMount() {
         navigator.mediaDevices.getUserMedia({video : true})
@@ -35,12 +40,62 @@ export class TeacherStudentStreaming extends React.Component {
             this.localVideoRef.current.srcObject = stream
             this.setState({localStream : stream})
         })
-        this.socket.on('joinStudent',data=>{
-            this.setState({studentList : [...this.state.studentList, data.student]})
+        this.socket.on('recOffer', message=>{
+            this.handleOffer(message)
+        })
+        this.socket.on('recCandidate', message=>{
+            this.handleNewICECandidateMsg(message)
         })
     }
-
-
+    sendMessage(message){
+        this.socket.emit('message', message)
+    }
+    handleOffer(message){
+        console.log("callee receive offer")
+        let {peer, localStream} = this.state
+        peer = new RTCPeerConnection(this.state.pcConfig)
+        localStream.getTracks().forEach(track=>peer.addTrack(track,localStream))
+        peer.onicecandidate = e => this.handleICECandidate(peer,e)
+        peer.ontrack = e => this.handleRemoteStreamAdded(e)
+        peer.setRemoteDescription(new RTCSessionDescription(message.sdp))
+            .then(()=>{
+                console.log(`success set remote description `)
+            })
+            .then(()=>{
+                peer.createAnswer().then(answer=>{
+                    peer.setLocalDescription(answer).then(()=>{
+                        this.sendMessage({
+                            name : "studentCode",
+                            target : "teacherCode",
+                            type : "answer",
+                            sdp : peer.localDescription
+                        })
+                    })
+                })
+            })
+        this.setState({localStream, peer})
+    }
+    handleRemoteStreamAdded(event){
+        console.log(`remote stream added on track`)
+        if (event.streams[0]){
+            this.remoteVideoRef.current.srcObject  = event.streams[0]
+        }    }
+    handleICECandidate(peer,e){
+        if (e.candidate){
+            this.sendMessage({
+                type : "candidate",
+                target : "teacherCode",
+                candidate: e.candidate
+            })
+        }
+    }
+    handleNewICECandidateMsg(message){
+        console.log(`addicecandidate ${message.target}`)
+        let {peer} = this.state
+        peer.addIceCandidate(new RTCIceCandidate(message.candidate)).then(r =>
+            console.log('success icecandidate added'))
+            .catch(e=>console.log(e))
+    }
     render() {
         const lectureMeterialList = [{seq : 1,fistName : "현대문학의 이해", lastName : "수정/삭제"},{seq : 2,fistName : "고전문학의 이해", lastName : "수정/삭제"},{seq : 3,fistName : "근대문학의 이해", lastName : "수정/삭제"}]
 
