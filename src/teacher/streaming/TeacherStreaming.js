@@ -100,11 +100,13 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
                 let {peer1} = this.state
                 peer1.setRemoteDescription(new RTCSessionDescription(message.sdp)).then(r =>
                     console.log(`remoteDescription setting success`))
+                    .catch(e=>console.log(e))
                 this.setState({peer1})
             }else if (message.studentCode === "???"){
                 let {peer2} = this.state
                 peer2.setRemoteDescription(new RTCSessionDescription(message.sdp)).then(()=>
                     console.log(`remoteDescription setting success`))
+                    .catch(e=>console.log(e))
                 this.setState({peer2})
             }
         })
@@ -160,6 +162,7 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
                         .then(()=>{
                             console.log("peer1 set local description success")
                         })
+                        .catch(e=>console.log(e))
                 })
                     .then(()=>{
                         this.sendMessage({
@@ -195,6 +198,7 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
                         .then(()=>{
                             console.log("peer1 set local description success")
                         })
+                        .catch(e=>console.log(e))
                 })
                     .then(()=>{
                         this.sendMessage({
@@ -225,13 +229,12 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
                     Call{" "}
                 </button>{" "}
                 <table className="t-streaming-student-video"> <tr>
-                    <video  ref={this.remoteVideoRef1} autoPlay />
                     {this.state.nowPage!==0 ?
                        <td><Button disabled={false} onClick={this.prevPage}>이전</Button></td>:<td><Button disabled={true} onClick={this.prevPage}>이전</Button></td>
                     }
                     {this.state.nowPageProps.map(props=>{
                         return (<td> <Card><p className="t-streaming-student-name">학번 : {props.info.fistName} 이름 : {props.info.lastName}</p></Card>
-                            <video className="t-streaming-student-video-component" poster={props.poster} autoPlay/></td>)
+                            <video className="t-streaming-student-video-component" poster={props.poster} autoPlay  ref={this.remoteVideoRef1}/></td>)
                         })}
                     {this.state.nowPage!==4 ?
                         <td><Button disabled={false} onClick={this.nextPage}>다음</Button></td>:<td><Button disabled={true} onClick={this.nextPage}>다음</Button></td>

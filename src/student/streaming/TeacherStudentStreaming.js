@@ -83,6 +83,8 @@ export class TeacherStudentStreaming extends React.Component {
                         peer.setLocalDescription(answer).then(()=>{
                             console.log("peer set local description success")
                         })
+                            .catch(e=>console.log(e))
+
                     })
                         .then(()=>{
                             console.log(`peer1 send icecandidate to ${message.teacherCode}`)
