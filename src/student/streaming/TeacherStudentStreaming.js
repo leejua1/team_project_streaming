@@ -81,7 +81,7 @@ export class TeacherStudentStreaming extends React.Component {
                 .then(()=>{
                     peer.createAnswer().then(answer=>{
                         peer.setLocalDescription(answer).then(()=>{
-                            console.log("peer set local description success")
+                            console.log("success set remote description")
                         })
                             .catch(e=>console.log(e))
 
@@ -104,6 +104,7 @@ export class TeacherStudentStreaming extends React.Component {
         peer.addIceCandidate(new RTCIceCandidate(message.candidate)).then(r =>
             console.log('success icecandidate added'))
             .catch(e=>console.log(e))
+        this.setState({peer})
     }
     render() {
         const lectureMeterialList = [{seq : 1,fistName : "현대문학의 이해", lastName : "수정/삭제"},{seq : 2,fistName : "고전문학의 이해", lastName : "수정/삭제"},{seq : 3,fistName : "근대문학의 이해", lastName : "수정/삭제"}]

@@ -6,7 +6,7 @@ function App() {
   return (
       <div className="h-100">
           <>
-              <TeacherStudentStreaming/>
+              <TeacherStreaming/>
        {/*   <Suspense fallback={<div className="loading"/>}>
                   <Router>
                       <Switch>
