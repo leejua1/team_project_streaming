@@ -32,8 +32,6 @@ export class TeacherStudentStreaming extends React.Component {
         this.socket = io.connect('https://secret-dawn-11778.herokuapp.com/')
         this.sendMessage = this.sendMessage.bind(this)
         this.handleOffer = this.handleOffer.bind(this)
-        this.handleRemoteStreamAdded = this.handleRemoteStreamAdded.bind(this)
-        this.handleICECandidate = this.handleICECandidate.bind(this)
         this.handleNewICECandidateMsg = this.handleNewICECandidateMsg.bind(this)
     }
     componentDidMount() {
