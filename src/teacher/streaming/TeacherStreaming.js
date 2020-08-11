@@ -109,13 +109,13 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
             }
         })
         this.socket.on('recCandidate', message=>{
-            if(message.target ==="100018002") {
+            if(message.name ==="100018002") {
                 const {peer1} = this.state
                 peer1.addIceCandidate(new RTCIceCandidate(message.candidate)).then(r =>
                     console.log('success icecandidate added'))
                     .catch(e=>console.log(e))
                 this.setState(peer1)
-            }else if(message.target ==="???"){
+            }else if(message.name ==="???"){
                 const {peer2} = this.state
                 peer2.addIceCandidate(new RTCIceCandidate(message.candidate)).then(r =>
                     console.log('success icecandidate added'))
@@ -132,8 +132,9 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
         let {localStream, count} = this.state
         console.log("offer")
         count++
+        console.log(count)
         switch (count) {
-            case 0:
+            case 1:
                 let {peer1} = this.state
                 peer1 = new RTCPeerConnection(this.state.config)
                 localStream.getTracks().forEach(track => peer1.addTrack(track,localStream))
@@ -149,9 +150,10 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
             }
                 peer1.ontrack = e=>  {
                 console.log('remote stream added on track')
-                if (e.streams[0]){
-                    this.remoteVideoRef1.current.srcObject =e.streams[0]
+                if (e.stream){
+                    this.remoteVideoRef1.current.srcObject =e.stream
                 }
+                this.setState(this.remoteVideoRef1)
             }
                 peer1.createOffer().then(offer=>{
                     peer1.setLocalDescription(offer)
@@ -169,7 +171,7 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
                     })
                 this.setState({peer1})
                 break;
-            case 1:
+            case 2:
                 let {peer2} = this.state
                 peer2 = new RTCPeerConnection(this.state.config)
                 localStream.getTracks().forEach(track => peer2.addTrack(track,localStream))
@@ -184,8 +186,8 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
                 }
                 peer2.ontrack = e=>{
                     console.log('remote stream added on track')
-                    if (e.streams[0]){
-                        this.remoteVideoRef2.current.srcObject =e.streams[0]
+                    if (e.stream){
+                        this.remoteVideoRef2.current.srcObject =e.stream
                     }
                 }
                 peer2.createOffer().then(offer=>{
@@ -223,12 +225,13 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
                     Call{" "}
                 </button>{" "}
                 <table className="t-streaming-student-video"> <tr>
+                    <video  ref={this.remoteVideoRef1} autoPlay />
                     {this.state.nowPage!==0 ?
                        <td><Button disabled={false} onClick={this.prevPage}>이전</Button></td>:<td><Button disabled={true} onClick={this.prevPage}>이전</Button></td>
                     }
                     {this.state.nowPageProps.map(props=>{
                         return (<td> <Card><p className="t-streaming-student-name">학번 : {props.info.fistName} 이름 : {props.info.lastName}</p></Card>
-                            <video className="t-streaming-student-video-component" poster={props.poster} ref={this.remoteVideoRef} autoPlay/></td>)
+                            <video className="t-streaming-student-video-component" poster={props.poster} autoPlay/></td>)
                         })}
                     {this.state.nowPage!==4 ?
                         <td><Button disabled={false} onClick={this.nextPage}>다음</Button></td>:<td><Button disabled={true} onClick={this.nextPage}>다음</Button></td>
