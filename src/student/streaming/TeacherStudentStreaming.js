@@ -79,15 +79,18 @@ export class TeacherStudentStreaming extends React.Component {
             .then(()=>{
                 peer.createAnswer().then(answer=>{
                     peer.setLocalDescription(answer).then(()=>{
-                        this.sendMessage({
-                            name : this.state.studentCode,
-                            target : message.teacherCode,
-                            type : "answer",
-                            sdp : peer.localDescription
-                        })
+                        console.log("peer set local description success")
                     })
                 })
-            })
+                        .then(()=>{
+                            this.sendMessage({
+                                name : this.state.studentCode,
+                                target : message.teacherCode,
+                                type : "answer",
+                                sdp : peer.localDescription
+                            })
+                        })
+                })
         this.setState({peer})
     }
     handleNewICECandidateMsg(message){
