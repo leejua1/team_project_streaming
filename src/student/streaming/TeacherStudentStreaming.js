@@ -88,7 +88,7 @@ export class TeacherStudentStreaming extends React.Component {
                     })
                 })
             })
-        this.setState({localStream, peer})
+        this.setState({peer})
     }
     handleNewICECandidateMsg(message){
         console.log(`addicecandidate ${message.target}`)
