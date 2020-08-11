@@ -85,6 +85,7 @@ export class TeacherStudentStreaming extends React.Component {
                         })
                     })
                         .then(()=>{
+                            console.log(`peer1 send icecandidate to ${message.teacherCode}`)
                             this.sendMessage({
                                 name : this.state.studentCode,
                                 target : message.teacherCode,
@@ -97,7 +98,6 @@ export class TeacherStudentStreaming extends React.Component {
 
     }
     handleNewICECandidateMsg(message){
-        console.log(`addicecandidate ${message.target}`)
         let {peer} = this.state
         peer.addIceCandidate(new RTCIceCandidate(message.candidate)).then(r =>
             console.log('success icecandidate added'))
