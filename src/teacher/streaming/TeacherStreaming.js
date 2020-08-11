@@ -99,12 +99,12 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
         this.socket.on('recAnswer', message=>{
             if(message.studentCode ==="100018002") {
                 let {peer1} = this.state
-                peer1.setRemoteDescription(message.sdp).then(r =>
+                peer1.setRemoteDescription(new RTCSessionDescription(message.sdp)).then(r =>
                     console.log(`remoteDescription setting success`))
                 this.setState({peer1})
             }else if (message.studentCode === "???"){
                 let {peer2} = this.state
-                peer2.setRemoteDescription(message.sdp).then(()=>
+                peer2.setRemoteDescription(new RTCSessionDescription(message.sdp)).then(()=>
                     console.log(`remoteDescription setting success`))
                 this.setState({peer2})
             }
@@ -112,12 +112,12 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
         this.socket.on('recCandidate', message=>{
             if(message.target ==="100018002") {
                 const {peer1} = this.state
-                peer1.addIceCandidate(message.candidate).then(r =>
+                peer1.addIceCandidate(new RTCIceCandidate(message.candidate)).then(r =>
                     console.log('success icecandidate added'))
                     .catch(e=>console.log(e))
             }else if(message.target ==="???"){
                 const {peer2} = this.state
-                peer2.addIceCandidate(message.candidate).then(r =>
+                peer2.addIceCandidate(new RTCIceCandidate(message.candidate)).then(r =>
                     console.log('success icecandidate added'))
                     .catch(e=>console.log(e))
             }
