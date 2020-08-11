@@ -40,8 +40,9 @@ export class TeacherStudentStreaming extends React.Component {
             .then(stream=>{
             this.localVideoRef.current.srcObject = stream
             this.setState({localStream : stream, localStreamAdded : true})
+                this.socket.emit('joinRoom', {roomName : this.state.classCode, code : this.state.studentCode})
         })
-        this.socket.emit('joinRoom', {roomName : this.state.classCode, code : this.state.studentCode})
+
         this.socket.on('recOffer', message=>{
             console.log(`receive offer from teacher`)
             this.handleOffer(message)
@@ -54,7 +55,6 @@ export class TeacherStudentStreaming extends React.Component {
         this.socket.emit('message', message)
     }
     handleOffer(message){
-        if (this.state.localStreamAdded){
             console.log("callee receive offer")
             let {peer} = this.state
             peer = new RTCPeerConnection(this.state.pcConfig)
@@ -97,7 +97,6 @@ export class TeacherStudentStreaming extends React.Component {
                         })
                 })
             this.setState({peer})
-        }
 
     }
     handleNewICECandidateMsg(message){
