@@ -76,7 +76,6 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
         this.nextPage = this.nextPage.bind(this)
         this.prevPage = this.prevPage.bind(this)
         this.offer = this.offer.bind(this)
-        this.handleNewICECandidateMsg = this.handleNewICECandidateMsg.bind(this)
         this.sendMessage = this.sendMessage.bind(this)
     }
 
