@@ -74,7 +74,7 @@ export class TeacherStudentStreaming extends React.Component {
                 if (e.streams[0]){
                     this.remoteVideoRef.current.srcObject  = e.streams[0]
                 }    }
-            peer.setRemoteDescription(new RTCSessionDescription(message.sdp))
+            peer.setRemoteDescription(message.sdp)
                 .then(()=>{
                     console.log(`success set remote description `)
                 })
@@ -100,7 +100,7 @@ export class TeacherStudentStreaming extends React.Component {
     handleNewICECandidateMsg(message){
         console.log(`addicecandidate ${message.target}`)
         let {peer} = this.state
-        peer.addIceCandidate(new RTCIceCandidate(message.candidate)).then(r =>
+        peer.addIceCandidate(message.candidate).then(r =>
             console.log('success icecandidate added'))
             .catch(e=>console.log(e))
     }
