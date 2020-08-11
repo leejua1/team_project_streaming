@@ -25,7 +25,7 @@ export class TeacherStudentStreaming extends React.Component {
                     {urls:  'turn:numb.viagenie.ca', credential : "muazkh", username : "webrtc@live.com"}]},
             studentList : [],
             classCode : "Kor112",
-            studentCode : "S00112"
+            studentCode : "100018002"
         }
         this.localVideoRef = React.createRef();
         this.remoteVideoRef = React.createRef();
@@ -62,8 +62,9 @@ export class TeacherStudentStreaming extends React.Component {
         peer.onicecandidate = (e)=>{
             if (e.candidate){
                 this.sendMessage({
+                    name : this.state.studentCode,
                     type : "candidate",
-                    target : "teacherCode",
+                    target : message.teacherCode,
                     candidate: e.candidate
                 })
             }
@@ -81,8 +82,8 @@ export class TeacherStudentStreaming extends React.Component {
                 peer.createAnswer().then(answer=>{
                     peer.setLocalDescription(answer).then(()=>{
                         this.sendMessage({
-                            name : message.studentId,
-                            target : message.teacherId,
+                            name : this.state.studentCode,
+                            target : message.teacherCode,
                             type : "answer",
                             sdp : peer.localDescription
                         })

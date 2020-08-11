@@ -67,7 +67,7 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
                     {urls:  'turn:numb.viagenie.ca', credential : "muazkh", username : "webrtc@live.com"}]},
             count : 0,
             classCode : "Kor112",
-            teacherCode :"T111223"
+            teacherCode :"100000103" // 1000은 학교코드 00은 선생식별 103은 담당학년반
         }
         this.localVideoRef = React.createRef();
         this.remoteVideoRef1 = React.createRef();
@@ -77,6 +77,7 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
         this.prevPage = this.prevPage.bind(this)
         this.offer = this.offer.bind(this)
         this.handleNewICECandidateMsg = this.handleNewICECandidateMsg.bind(this)
+        this.sendMessage = this.sendMessage.bind(this)
     }
 
     componentDidMount() {
@@ -96,12 +97,12 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
             this.offer(data)
         })
         this.socket.on('recAnswer', message=>{
-            if(message.target ==="???") {
+            if(message.name ==="100018002") {
                 let {peer1} = this.state
                 peer1.setRemoteDescription(new RTCSessionDescription(message.sdp)).then(r =>
                     console.log(`remoteDescription setting success`))
                 this.setState({peer1})
-            }else if (message.target === "???"){
+            }else if (message.name === "???"){
                 let {peer2} = this.state
                 peer2.setRemoteDescription(new RTCSessionDescription(message.sdp)).then(()=>
                     console.log(`remoteDescription setting success`))
@@ -109,7 +110,7 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
             }
         })
         this.socket.on('recCandidate', message=>{
-            if(message.target ==="???") {
+            if(message.target ==="100018002") {
                 const {peer1} = this.state
                 peer1.addIceCandidate(new RTCIceCandidate(message.candidate)).then(r =>
                     console.log('success icecandidate added'))
@@ -122,6 +123,9 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
             }
             })
 
+    }
+    sendMessage(message){
+        this.socket.emit('message',message)
     }
     offer(data){
         let {localStream, count} = this.state
@@ -136,7 +140,7 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
                 if (e.candidate){
                     this.sendMessage({
                         type : "candidate",
-                        target : data.studentId,
+                        target : data.studentCode,
                         candidate : e.candidate
                     })
                 }
@@ -155,8 +159,8 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
                 })
                     .then(()=>{
                         this.sendMessage({
-                            name : data.teacherId,
-                            target :data.studentId,
+                            name : this.state.teacherCode,
+                            target :data.studentCode,
                             type : "offer",
                             sdp : peer1.localDescription
                         })
@@ -170,7 +174,7 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
                     if (e.candidate){
                         this.sendMessage({
                             type : "candidate",
-                            target : data.studentId,
+                            target : data.studentCode,
                             candidate : e.candidate
                         })
                     }
@@ -189,8 +193,8 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
                 })
                     .then(()=>{
                         this.sendMessage({
-                            name : data.teacherId,
-                            target :data.studentId,
+                            name : this.state.teacherCode,
+                            target :data.studentCode,
                             type : "offer",
                             sdp : peer2.localDescription
                         })
