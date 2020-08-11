@@ -73,16 +73,17 @@ export class TeacherStudentStreaming extends React.Component {
                             console.log("success set local description")
                         })
                             .catch(e=>console.log(e))
-                    })
-                        .then(()=>{
-                            console.log(`peer1 send icecandidate to ${message.teacherCode}`)
-                            this.sendMessage({
-                                name : this.state.studentCode,
-                                target : message.teacherCode,
-                                type : "answer",
-                                sdp : peer.localDescription
+                            .then(()=>{
+                                console.log(`peer1 send icecandidate to ${message.teacherCode}`)
+                                this.sendMessage({
+                                    name : this.state.studentCode,
+                                    target : message.teacherCode,
+                                    type : "answer",
+                                    sdp : peer.localDescription
+                                })
                             })
-                        })
+                    })
+
                 })
             this.setState({peer})
 

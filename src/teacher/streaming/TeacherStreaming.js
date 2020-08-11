@@ -101,6 +101,7 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
             localStream.getTracks().forEach(track => peer1.addTrack(track,localStream))
             peer1.onicecandidate =  e => {this.iceCandidateHandler(e)}
             peer1.ontrack = e=>  {this.setRemoteTrack(e)}
+            this.setState({peer1, localStream})
             this.offer(data)
         })
         this.socket.on('recAnswer', message=>{
@@ -148,15 +149,16 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
                             console.log("peer1 set local description success")
                         })
                         .catch(e=>console.log(e))
-                })
-                    .then(()=>{
-                        this.sendMessage({
-                            name : this.state.teacherCode,
-                            target :data.studentCode,
-                            type : "offer",
-                            sdp : peer1.localDescription
+                        .then(()=>{
+                            this.sendMessage({
+                                name : this.state.teacherCode,
+                                target :data.studentCode,
+                                type : "offer",
+                                sdp : peer1.localDescription
+                            })
                         })
-                    })
+                })
+
                 this.setState({peer1})
 
     }
