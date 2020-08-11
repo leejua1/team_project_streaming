@@ -25,7 +25,8 @@ export class TeacherStudentStreaming extends React.Component {
                     {urls:  'turn:numb.viagenie.ca', credential : "muazkh", username : "webrtc@live.com"}]},
             studentList : [],
             classCode : "Kor112",
-            studentCode : "100018002"
+            studentCode : "100018002",
+            localStreamAdded : false
         }
         this.localVideoRef = React.createRef();
         this.remoteVideoRef = React.createRef();
@@ -38,7 +39,7 @@ export class TeacherStudentStreaming extends React.Component {
         navigator.mediaDevices.getUserMedia({video : true})
             .then(stream=>{
             this.localVideoRef.current.srcObject = stream
-            this.setState({localStream : stream})
+            this.setState({localStream : stream, localStreamAdded : true})
         })
         this.socket.emit('joinRoom', {roomName : this.state.classCode, code : this.state.studentCode})
         this.socket.on('recOffer', message=>{
@@ -53,35 +54,36 @@ export class TeacherStudentStreaming extends React.Component {
         this.socket.emit('message', message)
     }
     handleOffer(message){
-        console.log("callee receive offer")
-        let {peer} = this.state
-        peer = new RTCPeerConnection(this.state.pcConfig)
-        this.state.localStream.getTracks().forEach(track=>peer.addTrack(track,this.state.localStream))
-        peer.onicecandidate = (e)=>{
-            if (e.candidate){
-                this.sendMessage({
-                    name : this.state.studentCode,
-                    type : "candidate",
-                    target : message.teacherCode,
-                    candidate: e.candidate
-                })
-            }
-        }
-        peer.ontrack = e =>{
-            console.log(`remote stream added on track`)
-            if (e.streams[0]){
-                this.remoteVideoRef.current.srcObject  = e.streams[0]
-            }    }
-        peer.setRemoteDescription(new RTCSessionDescription(message.sdp))
-            .then(()=>{
-                console.log(`success set remote description `)
-            })
-            .then(()=>{
-                peer.createAnswer().then(answer=>{
-                    peer.setLocalDescription(answer).then(()=>{
-                        console.log("peer set local description success")
+        if (this.state.localStreamAdded){
+            console.log("callee receive offer")
+            let {peer} = this.state
+            peer = new RTCPeerConnection(this.state.pcConfig)
+            this.state.localStream.getTracks().forEach(track=>peer.addTrack(track,this.state.localStream))
+            peer.onicecandidate = (e)=>{
+                if (e.candidate){
+                    this.sendMessage({
+                        name : this.state.studentCode,
+                        type : "candidate",
+                        target : message.teacherCode,
+                        candidate: e.candidate
                     })
+                }
+            }
+            peer.ontrack = e =>{
+                console.log(`remote stream added on track`)
+                if (e.streams[0]){
+                    this.remoteVideoRef.current.srcObject  = e.streams[0]
+                }    }
+            peer.setRemoteDescription(new RTCSessionDescription(message.sdp))
+                .then(()=>{
+                    console.log(`success set remote description `)
                 })
+                .then(()=>{
+                    peer.createAnswer().then(answer=>{
+                        peer.setLocalDescription(answer).then(()=>{
+                            console.log("peer set local description success")
+                        })
+                    })
                         .then(()=>{
                             this.sendMessage({
                                 name : this.state.studentCode,
@@ -91,7 +93,9 @@ export class TeacherStudentStreaming extends React.Component {
                             })
                         })
                 })
-        this.setState({peer})
+            this.setState({peer})
+        }
+
     }
     handleNewICECandidateMsg(message){
         console.log(`addicecandidate ${message.target}`)
