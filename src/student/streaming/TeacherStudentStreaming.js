@@ -59,8 +59,20 @@ export class TeacherStudentStreaming extends React.Component {
         let {peer, localStream} = this.state
         peer = new RTCPeerConnection(this.state.pcConfig)
         localStream.getTracks().forEach(track=>peer.addTrack(track,localStream))
-        peer.onicecandidate = e => this.handleICECandidate(peer,e)
-        peer.ontrack = e => this.handleRemoteStreamAdded(e)
+        peer.onicecandidate = (e)=>{
+            if (e.candidate){
+                this.sendMessage({
+                    type : "candidate",
+                    target : "teacherCode",
+                    candidate: e.candidate
+                })
+            }
+        }
+        peer.ontrack = e =>{
+            console.log(`remote stream added on track`)
+            if (e.streams[0]){
+                this.remoteVideoRef.current.srcObject  = e.streams[0]
+            }    }
         peer.setRemoteDescription(new RTCSessionDescription(message.sdp))
             .then(()=>{
                 console.log(`success set remote description `)
@@ -69,8 +81,8 @@ export class TeacherStudentStreaming extends React.Component {
                 peer.createAnswer().then(answer=>{
                     peer.setLocalDescription(answer).then(()=>{
                         this.sendMessage({
-                            name : message.student,
-                            target : message.teacher,
+                            name : message.studentId,
+                            target : message.teacherId,
                             type : "answer",
                             sdp : peer.localDescription
                         })
@@ -78,20 +90,6 @@ export class TeacherStudentStreaming extends React.Component {
                 })
             })
         this.setState({localStream, peer})
-    }
-    handleRemoteStreamAdded(event){
-        console.log(`remote stream added on track`)
-        if (event.streams[0]){
-            this.remoteVideoRef.current.srcObject  = event.streams[0]
-        }    }
-    handleICECandidate(peer,e){
-        if (e.candidate){
-            this.sendMessage({
-                type : "candidate",
-                target : "teacherCode",
-                candidate: e.candidate
-            })
-        }
     }
     handleNewICECandidateMsg(message){
         console.log(`addicecandidate ${message.target}`)

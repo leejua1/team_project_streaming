@@ -91,9 +91,9 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
         this.socket.emit('joinRoom', {roomName : this.state.classCode, code: this.state.teacherCode}) //state에 저장된 classCode와 teacherCode가 서버로 보내진다.
 
 
-        this.socket.on('letOffer',studentData=>{
+        this.socket.on('letOffer',data=>{
             console.log('receive start offer message from server')
-            this.offer(studentData)
+            this.offer(data)
         })
         this.socket.on('recAnswer', message=>{
             if(message.target ==="???") {
@@ -123,7 +123,7 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
             })
 
     }
-    offer(studentData){
+    offer(data){
         let {localStream, count} = this.state
         console.log("offer")
         count++
@@ -136,7 +136,7 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
                 if (e.candidate){
                     this.sendMessage({
                         type : "candidate",
-                        target : studentData.id,
+                        target : data.studentId,
                         candidate : e.candidate
                     })
                 }
@@ -155,8 +155,8 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
                 })
                     .then(()=>{
                         this.sendMessage({
-                            name : studentData.teacher,
-                            target :studentData.student,
+                            name : data.teacherId,
+                            target :data.studentId,
                             type : "offer",
                             sdp : peer1.localDescription
                         })
@@ -170,7 +170,7 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
                     if (e.candidate){
                         this.sendMessage({
                             type : "candidate",
-                            target : studentData.id,
+                            target : data.studentId,
                             candidate : e.candidate
                         })
                     }
@@ -189,29 +189,15 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
                 })
                     .then(()=>{
                         this.sendMessage({
-                            name : "state에 저장된 선생코드",
-                            target : "payload로 넘어온 connected학생코드",
+                            name : data.teacherId,
+                            target :data.studentId,
                             type : "offer",
                             sdp : peer2.localDescription
                         })
                     })
         }
     }
-/*    handleICECandidateEvent(peer, e){
-        if (e.candidate){
-            this.sendMessage({
-                type : "candidate",
-                target : "studentCode",
-                candidate : e.candidate
-            })
-        }
-    }
-    handleRemoteStreamAdded(event){
-        console.log('remote stream added on track')
-        if (event.streams[0]){
-            this.remoteVideo.current.srcObject =event.streams[0]
-        }
-    }*/
+
     nextPage(){
        this.setState({nowPageProps :  this.state.videoProps.slice((this.state.nowPage+1)*6,(this.state.nowPage+1)*6+6),nowPage : this.state.nowPage+1})
     }
