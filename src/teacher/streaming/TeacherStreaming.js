@@ -97,12 +97,12 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
             this.offer(data)
         })
         this.socket.on('recAnswer', message=>{
-            if(message.name ==="100018002") {
+            if(message.studentCode ==="100018002") {
                 let {peer1} = this.state
                 peer1.setRemoteDescription(new RTCSessionDescription(message.sdp)).then(r =>
                     console.log(`remoteDescription setting success`))
                 this.setState({peer1})
-            }else if (message.name === "???"){
+            }else if (message.studentCode === "???"){
                 let {peer2} = this.state
                 peer2.setRemoteDescription(new RTCSessionDescription(message.sdp)).then(()=>
                     console.log(`remoteDescription setting success`))
