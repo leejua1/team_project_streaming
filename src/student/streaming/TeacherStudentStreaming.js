@@ -34,6 +34,8 @@ export class TeacherStudentStreaming extends React.Component {
         this.sendMessage = this.sendMessage.bind(this)
         this.handleOffer = this.handleOffer.bind(this)
         this.handleNewICECandidateMsg = this.handleNewICECandidateMsg.bind(this)
+        this.setRemoteTrack = this.setRemoteTrack.bind(this)
+        this.iceCandidateHandler = this.iceCandidateHandler.bind(this)
     }
     componentDidMount() {
         navigator.mediaDevices.getUserMedia({video : true})
@@ -59,21 +61,8 @@ export class TeacherStudentStreaming extends React.Component {
             let {peer} = this.state
             peer = new RTCPeerConnection(this.state.pcConfig)
             this.state.localStream.getTracks().forEach(track=>peer.addTrack(track,this.state.localStream))
-            peer.onicecandidate = (e)=>{
-                if (e.candidate){
-                    this.sendMessage({
-                        name : this.state.studentCode,
-                        type : "candidate",
-                        target : message.teacherCode,
-                        candidate: e.candidate
-                    })
-                }
-            }
-            peer.ontrack = e =>{
-                console.log(`remote stream added on track`)
-                if (e.streams[0]){
-                    this.remoteVideoRef.current.srcObject  = e.streams[0]
-                }    }
+            peer.onicecandidate = (e)=>{this.iceCandidateHandler(e)}
+            peer.ontrack = e =>{this.setRemoteTrack(e)}
             peer.setRemoteDescription(new RTCSessionDescription(message.sdp))
                 .then(()=>{
                     console.log(`success set remote description `)
@@ -84,7 +73,6 @@ export class TeacherStudentStreaming extends React.Component {
                             console.log("success set local description")
                         })
                             .catch(e=>console.log(e))
-
                     })
                         .then(()=>{
                             console.log(`peer1 send icecandidate to ${message.teacherCode}`)
@@ -98,6 +86,22 @@ export class TeacherStudentStreaming extends React.Component {
                 })
             this.setState({peer})
 
+    }
+    setRemoteTrack(e){
+        console.log(`remote stream added on track`)
+        if (e.streams[0]){
+            this.remoteVideoRef.current.srcObject  = e.streams[0]
+        }
+    }
+    iceCandidateHandler(e){
+        if (e.candidate){
+            this.sendMessage({
+                name : this.state.studentCode,
+                type : "candidate",
+                target : "100000103",
+                candidate: e.candidate
+            })
+        }
     }
     handleNewICECandidateMsg(message){
         let {peer} = this.state
