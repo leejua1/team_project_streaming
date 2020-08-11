@@ -145,10 +145,7 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
                 const {peer1} = this.state
                 peer1.createOffer().then(offer=>{
                     peer1.setLocalDescription(offer)
-                        .then(()=>{
-                            console.log("peer1 set local description success")
-                        })
-                        .catch(e=>console.log(e))
+                        .then(()=>{console.log("peer1 set local description success")})
                         .then(()=>{
                             this.sendMessage({
                                 name : this.state.teacherCode,
@@ -158,9 +155,7 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
                             })
                         })
                 })
-
                 this.setState({peer1})
-
     }
     iceCandidateHandler(e){
         if (e.candidate){

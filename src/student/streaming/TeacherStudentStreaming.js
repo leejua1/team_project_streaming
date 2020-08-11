@@ -72,7 +72,6 @@ export class TeacherStudentStreaming extends React.Component {
                         peer.setLocalDescription(answer).then(()=>{
                             console.log("success set local description")
                         })
-                            .catch(e=>console.log(e))
                             .then(()=>{
                                 console.log(`peer1 send icecandidate to ${message.teacherCode}`)
                                 this.sendMessage({
@@ -83,7 +82,6 @@ export class TeacherStudentStreaming extends React.Component {
                                 })
                             })
                     })
-
                 })
             this.setState({peer})
 
@@ -108,7 +106,6 @@ export class TeacherStudentStreaming extends React.Component {
         let {peer} = this.state
         peer.addIceCandidate(new RTCIceCandidate(message.candidate)).then(r =>
             console.log('success icecandidate added'))
-            .catch(e=>console.log(e))
         this.setState({peer})
     }
     render() {
