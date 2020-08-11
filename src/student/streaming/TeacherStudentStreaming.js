@@ -54,9 +54,9 @@ export class TeacherStudentStreaming extends React.Component {
     }
     handleOffer(message){
         console.log("callee receive offer")
-        let {peer, localStream} = this.state
+        let {peer} = this.state
         peer = new RTCPeerConnection(this.state.pcConfig)
-        localStream.getTracks().forEach(track=>peer.addTrack(track,localStream))
+        this.state.localStream.getTracks().forEach(track=>peer.addTrack(track,this.state.localStream))
         peer.onicecandidate = (e)=>{
             if (e.candidate){
                 this.sendMessage({

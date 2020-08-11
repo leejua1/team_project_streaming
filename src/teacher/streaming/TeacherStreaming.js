@@ -165,6 +165,7 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
                             sdp : peer1.localDescription
                         })
                     })
+                this.setState({peer1})
                 break;
             case 1:
                 let {peer2} = this.state
@@ -199,6 +200,7 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
                             sdp : peer2.localDescription
                         })
                     })
+                this.setState({peer2})
         }
     }
 
