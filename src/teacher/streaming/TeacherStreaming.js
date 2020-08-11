@@ -115,11 +115,13 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
                 peer1.addIceCandidate(new RTCIceCandidate(message.candidate)).then(r =>
                     console.log('success icecandidate added'))
                     .catch(e=>console.log(e))
+                this.setState(peer1)
             }else if(message.target ==="???"){
                 const {peer2} = this.state
                 peer2.addIceCandidate(new RTCIceCandidate(message.candidate)).then(r =>
                     console.log('success icecandidate added'))
                     .catch(e=>console.log(e))
+                this.setState(peer2)
             }
             })
 
@@ -137,6 +139,7 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
                 peer1 = new RTCPeerConnection(this.state.config)
                 localStream.getTracks().forEach(track => peer1.addTrack(track,localStream))
                 peer1.onicecandidate =  e => {
+                    console.log(`peer1 send icecandidate to ${data.studentCode}`)
                 if (e.candidate){
                     this.sendMessage({
                         type : "candidate",
@@ -209,13 +212,6 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
     }
     prevPage(){
         this.setState({nowPageProps :  this.state.videoProps.slice((this.state.nowPage-1)*6,(this.state.nowPage-1)*6+6), nowPage : this.state.nowPage-1})
-    }
-    handleNewICECandidateMsg(message){
-        console.log(`addicecandidate ${message.target}`)
-            let {peer} = this.state
-        peer.addIceCandidate(new RTCIceCandidate(message.candidate)).then(r =>
-                console.log('success icecandidate added'))
-                .catch(e=>console.log(e))
     }
 
 
