@@ -81,7 +81,7 @@ export class TeacherStudentStreaming extends React.Component {
                 .then(()=>{
                     peer.createAnswer().then(answer=>{
                         peer.setLocalDescription(answer).then(()=>{
-                            console.log("success set remote description")
+                            console.log("success set local description")
                         })
                             .catch(e=>console.log(e))
 
