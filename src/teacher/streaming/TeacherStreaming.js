@@ -105,11 +105,9 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
             peer1.onicecandidate =  e => {
                 this.addIceCandidateHandler(e)
                 console.log(`caller send icecandidate message to 100018002`)
-
             }
             peer1.ontrack = e=> {
                 this.setRemoteTrack(e)
-
             }
             this.setState({peer1})
             this.offer(data)
@@ -135,8 +133,8 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
     }
     setRemoteTrack(e){
         console.log('peer1 set remote stream added on track')
-        if (e.stream){
-            this.remoteVideoRef1.current.srcObject =e.stream
+        if (e.streams[0]){
+            this.remoteVideoRef1.current.srcObject =e.streams[0]
         }
         this.setState(this.remoteVideoRef1)
     }
