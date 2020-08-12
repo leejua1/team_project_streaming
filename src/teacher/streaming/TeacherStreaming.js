@@ -79,6 +79,7 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
         this.sendMessage = this.sendMessage.bind(this)
         this.handleIceCandidateMsg = this.handleIceCandidateMsg.bind(this)
         this.addIceCandidateHandler = this.addIceCandidateHandler.bind(this)
+        this.setRemoteTrack = this.setRemoteTrack.bind(this)
     }
 
     componentDidMount() {
@@ -107,11 +108,8 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
 
             }
             peer1.ontrack = e=> {
-                console.log('peer1 set remote stream added on track')
-                if (e.stream){
-                    this.remoteVideoRef1.current.srcObject =e.stream
-                }
-                this.setState(this.remoteVideoRef1)
+                this.setRemoteTrack(e)
+
             }
             this.setState({peer1})
             this.offer(data)
@@ -134,6 +132,13 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
         this.socket.on('recCandidate', message=>{
             this.handleIceCandidateMsg(message)
             })
+    }
+    setRemoteTrack(e){
+        console.log('peer1 set remote stream added on track')
+        if (e.stream){
+            this.remoteVideoRef1.current.srcObject =e.stream
+        }
+        this.setState(this.remoteVideoRef1)
     }
     handleIceCandidateMsg(message){
         if(message.name ==="100018002") {

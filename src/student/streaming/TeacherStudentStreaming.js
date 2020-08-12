@@ -26,8 +26,7 @@ export class TeacherStudentStreaming extends React.Component {
             studentList : [],
             classCode : "Kor112",
             studentCode : "100018002",
-            localStreamAdded : false,
-            peerCreated : false
+            localStreamAdded : false
         }
         this.localVideoRef = React.createRef();
         this.remoteVideoRef = React.createRef();
@@ -42,10 +41,10 @@ export class TeacherStudentStreaming extends React.Component {
         navigator.mediaDevices.getUserMedia({video : true})
             .then(stream=>{
             this.localVideoRef.current.srcObject = stream
-            this.setState({localStream : stream, localStreamAdded : true})
-
+            this.setState({localStream : stream})
+                this.socket.emit('joinRoom', {roomName : this.state.classCode, code : this.state.studentCode})
         })
-        this.socket.emit('joinRoom', {roomName : this.state.classCode, code : this.state.studentCode})
+
         this.socket.on('recOffer', message=>{
             console.log(`receive offer from teacher`)
             this.handleOffer(message)
@@ -60,7 +59,6 @@ export class TeacherStudentStreaming extends React.Component {
     handleOffer(message){
             console.log("callee receive offer")
             let {peer, localStream} = this.state
-        if (this.state.localStreamAdded){
             peer = new RTCPeerConnection(this.state.pcConfig)
             localStream.getTracks().forEach(track=>peer.addTrack(track,localStream))
             peer.onicecandidate = (e)=>{this.iceCandidateHandler(e)}
@@ -81,9 +79,7 @@ export class TeacherStudentStreaming extends React.Component {
                             })
                         })
                 })
-            this.setState({peer, peerCreated : true})
-        }
-
+            this.setState({peer})
 
     }
     setRemoteTrack(e){
@@ -104,11 +100,9 @@ export class TeacherStudentStreaming extends React.Component {
         }
     }
     handleNewICECandidateMsg(message){
-        let {peer, peerCreated} = this.state
-        if (peerCreated){
-            peer.addIceCandidate(new RTCIceCandidate(message.candidate)).then(r =>
-                console.log('success icecandidate added'))
-        }
+        let {peer} = this.state
+        peer.addIceCandidate(new RTCIceCandidate(message.candidate)).then(r =>
+            console.log('success icecandidate added'))
         this.setState({peer})
     }
     render() {
