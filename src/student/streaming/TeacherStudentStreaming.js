@@ -77,6 +77,7 @@ export class TeacherStudentStreaming extends React.Component {
                 })
                 .then(()=>{
                     peer.createAnswer().then(answer=>{
+<<<<<<< HEAD
                         peer.setLocalDescription(answer).then(()=>console.log('peer set remote description success'))})
                         .then(()=>{
                             this.sendMessage({
@@ -84,6 +85,19 @@ export class TeacherStudentStreaming extends React.Component {
                                 target : message.teacherCode,
                                 type : "answer",
                                 sdp : peer.localDescription
+=======
+                        peer.setLocalDescription(answer).then(()=>{
+                            console.log("success set local description")
+                                .then(()=>{
+                                    console.log(`peer1 send icecandidate to ${message.teacherCode}`)
+                                    this.sendMessage({
+                                        name : this.state.studentCode,
+                                        target : message.teacherCode,
+                                        type : "answer",
+                                        sdp : peer.localDescription
+                                    })
+                        })
+>>>>>>> parent of ed8a42f... 0811
                             })
                         })
                 })
