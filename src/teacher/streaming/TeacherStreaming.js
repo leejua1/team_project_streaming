@@ -136,8 +136,7 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
     offer(data){
         console.log("offer")
         let {peer1, localStream} = this.state
-        navigator.mediaDevices.getUserMedia({video : true})
-            .then(stream=>{stream.getTracks().forEach(track => peer1.addTrack(track,localStream))})
+        localStream.getTracks().forEach(track=>peer1.addTrack(track,localStream))
         peer1 = new RTCPeerConnection({
             configuration: {
                 offerToReceiveAudio: true,
