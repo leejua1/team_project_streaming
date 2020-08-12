@@ -25,7 +25,7 @@ export class TeacherStudentStreaming extends React.Component {
                     {urls:  'turn:numb.viagenie.ca', credential : "muazkh", username : "webrtc@live.com"}]},
             studentList : [],
             classCode : "Kor112",
-            studentCode : "100018002",
+            studentCode : "100018001",
             localStreamAdded : false
         }
         this.localVideoRef = React.createRef();

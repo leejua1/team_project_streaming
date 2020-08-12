@@ -29,31 +29,31 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
                 {seq : 18,fistName : "030518", lastName : "Frank"},{seq : 19,fistName : "030519", lastName : "Dennis"},{seq : 20,fistName : "030520", lastName : "Donald"},
                 {seq : 21,fistName : "030521", lastName : "Athur"},{seq : 22,fistName : "030522", lastName : "Edward"},{seq : 23,fistName : "030523", lastName : "Harry"},
                 {seq : 24,fistName : "030524", lastName : "Peter"},{seq : 25,fistName : "030525", lastName : "Richard"}],
-            videoProps : [{poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info:{seq : 1,fistName : "030501", lastName : "Mary"}},
-                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info:{seq : 2,fistName : "030502", lastName : "Carrie"}},
-                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info:{seq : 3,fistName : "030503", lastName : "Dorothy"}},
-                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info:{seq : 4,fistName : "030504", lastName : "Helen"}},
-                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info:{seq : 5,fistName : "030505", lastName : "Carol"}},
-                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info:{seq : 6,fistName : "030506", lastName : "Betty"}},
-                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info:{seq : 7,fistName : "030507", lastName : "Sally"}},
-                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info:{seq : 8,fistName : "030508", lastName : "Susan"}},
-                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info:{seq : 9,fistName : "030509", lastName : "Shirley"}},
-                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info:{seq : 10,fistName : "030510", lastName : "Diane"}},
-                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info:{seq : 11,fistName : "030511", lastName : "Anna"}},
-                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info: {seq : 12,fistName : "030512", lastName : "Elizabeth"}},
-                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info:{seq : 13,fistName : "030513", lastName : "Margaret"}},
-                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info:{seq : 14,fistName : "030514", lastName : "Clara"}},
-                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info:{seq : 15,fistName : "030515", lastName : "Annie"}},
-                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info:{seq : 16,fistName : "030516", lastName : "Grace"}},
-                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info:{seq : 17,fistName : "030517", lastName : "Nancy"}},
-                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info: {seq : 18,fistName : "030518", lastName : "Frank"}},
-                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info:{seq : 19,fistName : "030519", lastName : "Dennis"}},
-                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info:{seq : 20,fistName : "030520", lastName : "Donald"}},
-                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info: {seq : 21,fistName : "030521", lastName : "Athur"}},
-                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info:{seq : 22,fistName : "030522", lastName : "Edward"}},
-                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info:{seq : 23,fistName : "030523", lastName : "Harry"}},
-                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info: {seq : 24,fistName : "030524", lastName : "Peter"}},
-                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info:{seq : 25,fistName : "030525", lastName : "Richard"}}],
+            videoProps : [{poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info:{seq : 1,fistName : "030501", lastName : "Mary"}, ref : this.remoteVideoRef1 },
+                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info:{seq : 2,fistName : "030502", lastName : "Carrie"}, ref : this.remoteVideoRef2 },
+                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info:{seq : 3,fistName : "030503", lastName : "Dorothy"}, ref : null },
+                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info:{seq : 4,fistName : "030504", lastName : "Helen"}, ref : null},
+                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info:{seq : 5,fistName : "030505", lastName : "Carol"}, ref : null},
+                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info:{seq : 6,fistName : "030506", lastName : "Betty"}, ref : null},
+                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info:{seq : 7,fistName : "030507", lastName : "Sally"}, ref : null},
+                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info:{seq : 8,fistName : "030508", lastName : "Susan"}, ref : null},
+                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info:{seq : 9,fistName : "030509", lastName : "Shirley"}, ref : null},
+                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info:{seq : 10,fistName : "030510", lastName : "Diane"}, ref : null},
+                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info:{seq : 11,fistName : "030511", lastName : "Anna"}, ref : null},
+                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info: {seq : 12,fistName : "030512", lastName : "Elizabeth"}, ref : null},
+                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info:{seq : 13,fistName : "030513", lastName : "Margaret"}, ref : null},
+                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info:{seq : 14,fistName : "030514", lastName : "Clara"}, ref : null},
+                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info:{seq : 15,fistName : "030515", lastName : "Annie"}, ref : null},
+                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info:{seq : 16,fistName : "030516", lastName : "Grace"}, ref : null},
+                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info:{seq : 17,fistName : "030517", lastName : "Nancy"}, ref : null},
+                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info: {seq : 18,fistName : "030518", lastName : "Frank"}, ref : null},
+                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info:{seq : 19,fistName : "030519", lastName : "Dennis"}, ref : null},
+                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info:{seq : 20,fistName : "030520", lastName : "Donald"}, ref : null},
+                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info: {seq : 21,fistName : "030521", lastName : "Athur"}, ref : null},
+                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info:{seq : 22,fistName : "030522", lastName : "Edward"}, ref : null},
+                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info:{seq : 23,fistName : "030523", lastName : "Harry"}, ref : null},
+                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info: {seq : 24,fistName : "030524", lastName : "Peter"}, ref : null},
+                {poster: "https://thumbs.gfycat.com/AdoredDeafeningFox-size_restricted.gif", info:{seq : 25,fistName : "030525", lastName : "Richard"}, ref : null}],
             nowPageProps : [],
             nowPage : 0,
             noPrev : false,
@@ -78,8 +78,10 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
         this.offer = this.offer.bind(this)
         this.sendMessage = this.sendMessage.bind(this)
         this.handleIceCandidateMsg = this.handleIceCandidateMsg.bind(this)
-        this.addIceCandidateHandler = this.addIceCandidateHandler.bind(this)
-        this.setRemoteTrack = this.setRemoteTrack.bind(this)
+        this.iceCandidateHandlerOnPeer1 = this.iceCandidateHandlerOnPeer1.bind(this)
+        this.iceCandidateHandlerOnPeer2 = this.iceCandidateHandlerOnPeer2.bind(this)
+        this.setRemoteTrackOnPeer1 = this.setRemoteTrackOnPeer1.bind(this)
+        this.setRemoteTrackOnPeer2 = this.setRemoteTrackOnPeer2.bind(this)
     }
 
     componentDidMount() {
@@ -89,74 +91,108 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
                 this.setState({localStream: stream})
             })
         this.setState({nowPageProps:  this.state.videoProps.slice(0,6)})
-
-
         this.socket.emit('joinRoom', {roomName : this.state.classCode, code: this.state.teacherCode}) //state에 저장된 classCode와 teacherCode가 서버로 보내진다.
-
-
         this.socket.on('letOffer',data=>{
-            console.log('receive start offer message from server')
-            console.log("offer")
-            let {peer1, localStream} = this.state
-            peer1 = new RTCPeerConnection(this.state.pcConfig)
-            localStream.getTracks().forEach(track=>peer1.addTrack(track,localStream))
-
-
-            peer1.onicecandidate =  e => {
-                this.addIceCandidateHandler(e)
-                console.log(`caller send icecandidate message to 100018002`)
-            }
-            peer1.ontrack = e=> {
-                this.setRemoteTrack(e)
-            }
-            this.setState({peer1})
+            console.log(`receive start offer message from server code ${data.studentCode}`)
+            const {localStream} = this.state
+            switch (data.studentCode) {
+                case "100018001":
+                    let {peer1} = this.state
+                    peer1 = new RTCPeerConnection(this.state.pcConfig)
+                    localStream.getTracks().forEach(track=>peer1.addTrack(track,localStream))
+                    peer1.onicecandidate =  (e) => {
+                        this.iceCandidateHandlerOnPeer1(e)
+                        console.log(`caller send icecandidate message to 100018001`)
+                    }
+                    peer1.ontrack = e=> {
+                        this.setRemoteTrackOnPeer1(e)
+                    }
+                    this.setState({peer1})
+                    break;
+                case "100018002":
+                    let {peer2} = this.state
+                    peer2 = new RTCPeerConnection(this.state.pcConfig)
+                    localStream.getTracks().forEach(track=>peer2.addTrack(track,localStream))
+                    peer2.onicecandidate =  e => {
+                        this.iceCandidateHandlerOnPeer2(e)
+                        console.log(`caller send icecandidate message to 100018001`)
+                    }
+                    peer2.ontrack = e=> {
+                        this.setRemoteTrackOnPeer2(e)
+                    }
+                    this.setState({peer2})
+                    break;
+                }
+                this.setState({localStream})
             this.offer(data)
         })
         this.socket.on('recAnswer', message=>{
-            if(message.studentCode ==="100018002") {
-                let {peer1} = this.state
-                peer1.setRemoteDescription(new RTCSessionDescription(message.sdp)).then(r =>
-                    console.log(`success remotedescription set on peer1`))
-                    .catch(e=>console.log(e))
-                this.setState({peer1})
-            }else if (message.studentCode === "???"){
-                let {peer2} = this.state
-                peer2.setRemoteDescription(new RTCSessionDescription(message.sdp)).then(()=>
-                    console.log(`remoteDescription setting success`))
-                    .catch(e=>console.log(e))
-                this.setState({peer2})
+            switch (message.studentCode) {
+                case "100018001":
+                    let {peer1} = this.state
+                    peer1.setRemoteDescription(new RTCSessionDescription(message.sdp)).then(r =>
+                        console.log(`success remotedescription set on peer1`))
+                        .catch(e=>console.log(e))
+                    this.setState({peer1})
+                    break;
+                case "100018002":
+                    let {peer2} = this.state
+                    peer2.setRemoteDescription(new RTCSessionDescription(message.sdp)).then(()=>
+                        console.log(`remoteDescription setting success`))
+                        .catch(e=>console.log(e))
+                    this.setState({peer2})
+                    break;
             }
         })
         this.socket.on('recCandidate', message=>{
             this.handleIceCandidateMsg(message)
             })
     }
-    setRemoteTrack(e){
+    setRemoteTrackOnPeer1(e){
         console.log('peer1 set remote stream added on track')
         if (e.streams[0]){
             this.remoteVideoRef1.current.srcObject =e.streams[0]
         }
         this.setState(this.remoteVideoRef1)
     }
+    setRemoteTrackOnPeer2(e){
+        console.log('peer2 set remote stream added on track')
+        if (e.streams[0]){
+            this.remoteVideoRef2.current.srcObject =e.streams[0]
+        }
+        this.setState(this.remoteVideoRef2)
+    }
     handleIceCandidateMsg(message){
-        if(message.name ==="100018002") {
-            const {peer1} = this.state
-            peer1.addIceCandidate(new RTCIceCandidate(message.candidate)).then(r =>
-                console.log('success icecandidate added'))
-                .catch(e=>console.log(e))
-            this.setState(peer1)
-        }else if(message.name ==="???"){
-            const {peer2} = this.state
-            peer2.addIceCandidate(new RTCIceCandidate(message.candidate)).then(r =>
-                console.log('success icecandidate added'))
-                .catch(e=>console.log(e))
-            this.setState(peer2)
+        switch (message.name) {
+            case "100018001" :
+                const {peer1} = this.state
+                peer1.addIceCandidate(new RTCIceCandidate(message.candidate)).then(r =>
+                    console.log('success icecandidate added'))
+                    .catch(e=>console.log(e))
+                this.setState(peer1)
+                break;
+                case "100018002" :
+                    const {peer2} = this.state
+                    peer2.addIceCandidate(new RTCIceCandidate(message.candidate)).then(r =>
+                        console.log('success icecandidate added'))
+                        .catch(e=>console.log(e))
+                    this.setState(peer2)
+                    break;
         }
     }
     sendMessage(message){
         this.socket.emit('message',message)
     }
-    addIceCandidateHandler(e){
+    iceCandidateHandlerOnPeer1(e){
+        if (e.candidate){
+            this.sendMessage({
+                type : "candidate",
+                target : "100018001",
+                candidate : e.candidate
+            })
+        }
+    }
+    iceCandidateHandlerOnPeer2(e){
         if (e.candidate){
             this.sendMessage({
                 type : "candidate",
@@ -166,7 +202,9 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
         }
     }
     offer(data){
-        let {peer1} = this.state
+        switch (data.studentCode) {
+            case "100018001":
+                let {peer1} = this.state
                 peer1.createOffer().then(offer=>{
                     peer1.setLocalDescription(offer)
                         .then(()=>{
@@ -175,16 +213,37 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
                         .catch(e=>{
                             console.log(e)
                         })})
-                        .then(()=>{
-                            this.sendMessage({
-                                name : this.state.teacherCode,
-                                target :data.studentCode,
-                                type : "offer",
-                                sdp : peer1.localDescription
+                    .then(()=>{
+                        this.sendMessage({
+                            name : this.state.teacherCode,
+                            target :data.studentCode,
+                            type : "offer",
+                            sdp : peer1.localDescription
                         })
-
-                })
+                    })
                 this.setState({peer1})
+                break;
+            case "100018002" :
+                let {peer2} = this.state
+                peer2.createOffer().then(offer=>{
+                    peer2.setLocalDescription(offer)
+                        .then(()=>{
+                            console.log("peer2 set local description success")
+                        })
+                        .catch(e=>{
+                            console.log(e)
+                        })})
+                    .then(()=>{
+                        this.sendMessage({
+                            name : this.state.teacherCode,
+                            target :data.studentCode,
+                            type : "offer",
+                            sdp : peer2.localDescription
+                        })
+                    })
+                this.setState({peer2})
+                break
+        }
     }
     nextPage(){
        this.setState({nowPageProps :  this.state.videoProps.slice((this.state.nowPage+1)*6,(this.state.nowPage+1)*6+6),nowPage : this.state.nowPage+1})
@@ -203,13 +262,12 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
                     Call{" "}
                 </button>{" "}
                 <table className="t-streaming-student-video"> <tr>
-                    <video autoPlay ref={this.remoteVideoRef1}/>
                     {this.state.nowPage!==0 ?
                        <td><Button disabled={false} onClick={this.prevPage}>이전</Button></td>:<td><Button disabled={true} onClick={this.prevPage}>이전</Button></td>
                     }
                     {this.state.nowPageProps.map(props=>{
                         return (<td> <Card><p className="t-streaming-student-name">학번 : {props.info.fistName} 이름 : {props.info.lastName}</p></Card>
-                            <video className="t-streaming-student-video-component" autoPlay  ref={this.remoteVideoRef1}/></td>)
+                            <video className="t-streaming-student-video-component" autoPlay  ref={props.ref}/></td>)
                         })}
                     {this.state.nowPage!==4 ?
                         <td><Button disabled={false} onClick={this.nextPage}>다음</Button></td>:<td><Button disabled={true} onClick={this.nextPage}>다음</Button></td>
