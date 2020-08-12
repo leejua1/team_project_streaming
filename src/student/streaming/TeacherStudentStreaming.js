@@ -26,7 +26,8 @@ export class TeacherStudentStreaming extends React.Component {
             studentList : [],
             classCode : "Kor112",
             studentCode : "100018002",
-            localStreamAdded : false
+            localStreamAdded : false,
+            peerCreated : false
         }
         this.localVideoRef = React.createRef();
         this.remoteVideoRef = React.createRef();
@@ -80,7 +81,7 @@ export class TeacherStudentStreaming extends React.Component {
                             })
                         })
                 })
-            this.setState({peer})
+            this.setState({peer, peerCreated : true})
         }
 
 
@@ -103,9 +104,11 @@ export class TeacherStudentStreaming extends React.Component {
         }
     }
     handleNewICECandidateMsg(message){
-        let {peer} = this.state
-        peer.addIceCandidate(new RTCIceCandidate(message.candidate)).then(r =>
-            console.log('success icecandidate added'))
+        let {peer, peerCreated} = this.state
+        if (peerCreated){
+            peer.addIceCandidate(new RTCIceCandidate(message.candidate)).then(r =>
+                console.log('success icecandidate added'))
+        }
         this.setState({peer})
     }
     render() {
