@@ -21,7 +21,7 @@ export class TeacherStudentStreaming extends React.Component {
             peer: null,
             localStream: null,
             remoteStream : null,
-            config : {'iceServers' : [{urls: 'stun:stun.l.google.com:19302'},
+            pcConfig : {'iceServers' : [{urls: 'stun:stun.l.google.com:19302'},
                     {urls:  'turn:numb.viagenie.ca', credential : "muazkh", username : "webrtc@live.com"}]},
             studentList : [],
             classCode : "Kor112",
@@ -59,13 +59,7 @@ export class TeacherStudentStreaming extends React.Component {
     handleOffer(message){
             console.log("callee receive offer")
             let {peer, localStream} = this.state
-            peer = new RTCPeerConnection({
-                configuration: {
-                    offerToReceiveAudio: true,
-                    offerToReceiveVideo: true
-                },
-                iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
-            })
+            peer = new RTCPeerConnection(this.state.pcConfig)
                 localStream.getTracks().forEach(track=>peer.addTrack(track,localStream))
             peer.onicecandidate = (e)=>{this.iceCandidateHandler(e)}
             peer.ontrack = e =>{this.setRemoteTrack(e)}
