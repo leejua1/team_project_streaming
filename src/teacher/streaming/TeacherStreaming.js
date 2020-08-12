@@ -200,6 +200,7 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
                     Call{" "}
                 </button>{" "}
                 <table className="t-streaming-student-video"> <tr>
+                    <video autoPlay ref={this.remoteVideoRef1}/>
                     {this.state.nowPage!==0 ?
                        <td><Button disabled={false} onClick={this.prevPage}>이전</Button></td>:<td><Button disabled={true} onClick={this.prevPage}>이전</Button></td>
                     }

@@ -41,10 +41,10 @@ export class TeacherStudentStreaming extends React.Component {
         navigator.mediaDevices.getUserMedia({video : true})
             .then(stream=>{
             this.localVideoRef.current.srcObject = stream
-            this.setState({localStream : stream, localStreamAdded : true})
-                this.socket.emit('joinRoom', {roomName : this.state.classCode, code : this.state.studentCode})
-        })
+            this.setState({localStream : stream})
 
+        })
+        this.socket.emit('joinRoom', {roomName : this.state.classCode, code : this.state.studentCode})
         this.socket.on('recOffer', message=>{
             console.log(`receive offer from teacher`)
             this.handleOffer(message)
