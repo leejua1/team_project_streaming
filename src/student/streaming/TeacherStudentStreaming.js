@@ -44,7 +44,6 @@ export class TeacherStudentStreaming extends React.Component {
             this.setState({localStream : stream})
                 this.socket.emit('joinRoom', {roomName : this.state.classCode, code : this.state.studentCode})
         })
-
         this.socket.on('recOffer', message=>{
             console.log(`receive offer from teacher`)
             this.handleOffer(message)
@@ -52,9 +51,6 @@ export class TeacherStudentStreaming extends React.Component {
         this.socket.on('recCandidate', message=>{
             this.handleNewICECandidateMsg(message)
         })
-    }
-    sendMessage(message){
-        this.socket.emit('message', message)
     }
     handleOffer(message){
             console.log("callee receive offer")
@@ -80,13 +76,9 @@ export class TeacherStudentStreaming extends React.Component {
                         })
                 })
             this.setState({peer})
-
     }
-    setRemoteTrack(e){
-        console.log(`remote stream added on track`)
-        if (e.streams[0]){
-            this.remoteVideoRef.current.srcObject  = e.streams[0]
-        }
+    sendMessage(message){
+        this.socket.emit('message', message)
     }
     iceCandidateHandler(e){
         if (e.candidate){
@@ -99,6 +91,13 @@ export class TeacherStudentStreaming extends React.Component {
             })
         }
     }
+    setRemoteTrack(e){
+        console.log(`remote stream added on track`)
+        if (e.streams[0]){
+            this.remoteVideoRef.current.srcObject  = e.streams[0]
+        }
+    }
+
     handleNewICECandidateMsg(message){
         let {peer} = this.state
         peer.addIceCandidate(new RTCIceCandidate(message.candidate)).then(r =>

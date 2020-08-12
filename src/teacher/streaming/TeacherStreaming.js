@@ -100,8 +100,6 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
             let {peer1, localStream} = this.state
             peer1 = new RTCPeerConnection(this.state.pcConfig)
             localStream.getTracks().forEach(track=>peer1.addTrack(track,localStream))
-
-
             peer1.onicecandidate =  e => {
                 this.addIceCandidateHandler(e)
                 console.log(`caller send icecandidate message to 100018002`)
@@ -131,12 +129,45 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
             this.handleIceCandidateMsg(message)
             })
     }
+    offer(data){
+        let {peer1} = this.state
+        peer1.createOffer().then(offer=>{
+            peer1.setLocalDescription(offer)
+                .then(()=>{
+                    console.log("peer1 set local description success")
+                })
+                .catch(e=>{
+                    console.log(e)
+                })})
+            .then(()=>{
+                this.sendMessage({
+                    name : this.state.teacherCode,
+                    target :data.studentCode,
+                    type : "offer",
+                    sdp : peer1.localDescription
+                })
+
+            })
+        this.setState({peer1})
+    }
+    addIceCandidateHandler(e){
+        if (e.candidate){
+            this.sendMessage({
+                type : "candidate",
+                target : "100018002",
+                candidate : e.candidate
+            })
+        }
+    }
     setRemoteTrack(e){
         console.log('peer1 set remote stream added on track')
         if (e.streams[0]){
             this.remoteVideoRef1.current.srcObject =e.streams[0]
         }
         this.setState(this.remoteVideoRef1)
+    }
+    sendMessage(message){
+        this.socket.emit('message',message)
     }
     handleIceCandidateMsg(message){
         if(message.name ==="100018002") {
@@ -153,39 +184,9 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
             this.setState(peer2)
         }
     }
-    sendMessage(message){
-        this.socket.emit('message',message)
-    }
-    addIceCandidateHandler(e){
-        if (e.candidate){
-            this.sendMessage({
-                type : "candidate",
-                target : "100018002",
-                candidate : e.candidate
-            })
-        }
-    }
-    offer(data){
-        let {peer1} = this.state
-                peer1.createOffer().then(offer=>{
-                    peer1.setLocalDescription(offer)
-                        .then(()=>{
-                            console.log("peer1 set local description success")
-                        })
-                        .catch(e=>{
-                            console.log(e)
-                        })})
-                        .then(()=>{
-                            this.sendMessage({
-                                name : this.state.teacherCode,
-                                target :data.studentCode,
-                                type : "offer",
-                                sdp : peer1.localDescription
-                        })
 
-                })
-                this.setState({peer1})
-    }
+
+
     nextPage(){
        this.setState({nowPageProps :  this.state.videoProps.slice((this.state.nowPage+1)*6,(this.state.nowPage+1)*6+6),nowPage : this.state.nowPage+1})
     }
@@ -203,7 +204,6 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
                     Call{" "}
                 </button>{" "}
                 <table className="t-streaming-student-video"> <tr>
-                    <video autoPlay ref={this.remoteVideoRef1}/>
                     {this.state.nowPage!==0 ?
                        <td><Button disabled={false} onClick={this.prevPage}>이전</Button></td>:<td><Button disabled={true} onClick={this.prevPage}>이전</Button></td>
                     }
