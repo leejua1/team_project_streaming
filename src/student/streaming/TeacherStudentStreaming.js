@@ -59,7 +59,13 @@ export class TeacherStudentStreaming extends React.Component {
     handleOffer(message){
             console.log("callee receive offer")
             let {peer} = this.state
-            peer = new RTCPeerConnection(this.state.pcConfig)
+            peer = new RTCPeerConnection({
+                configuration: {
+                    offerToReceiveAudio: true,
+                    offerToReceiveVideo: true
+                },
+                iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
+            })
         navigator.mediaDevices.getUserMedia({video : true})
             .then(stream=>{
                 stream.getTracks().forEach(track=>peer.addTrack(track,stream))})
@@ -71,7 +77,7 @@ export class TeacherStudentStreaming extends React.Component {
                 })
                 .then(()=>{
                     peer.createAnswer().then(answer=>{
-                        peer.setLocalDescription(answer).then(()=>console.log('pc2 set remote description success'))})
+                        peer.setLocalDescription(answer).then(()=>console.log('peer set remote description success'))})
                         .then(()=>{
                             this.sendMessage({
                                 name : this.state.studentCode,
