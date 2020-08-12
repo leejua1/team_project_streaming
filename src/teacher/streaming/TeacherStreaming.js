@@ -90,24 +90,17 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
             })
         this.setState({nowPageProps:  this.state.videoProps.slice(0,6)})
 
+
         this.socket.emit('joinRoom', {roomName : this.state.classCode, code: this.state.teacherCode}) //state에 저장된 classCode와 teacherCode가 서버로 보내진다.
+
 
         this.socket.on('letOffer',data=>{
             console.log('receive start offer message from server')
             let {peer1, localStream} = this.state
             peer1 = new RTCPeerConnection(this.state.config)
             navigator.mediaDevices.getUserMedia({video : true})
-                .then(stream=>{stream.getTracks().forEach(track => peer1.addTrack(track,stream))})
-            peer1.onicecandidate =  e => {
-                console.log(`caller send icecandidate message to 100018002`)
-                if (e.candidate){
-                    this.sendMessage({
-                        type : "candidate",
-                        target : "100018002",
-                        candidate : e.candidate
-                    })
-                }
-            }
+                .then(stream=>{stream.getTracks().forEach(track => peer1.addTrack(track,localStream))})
+            peer1.onicecandidate =  e => {this.iceCandidateHandler(e)}
             peer1.ontrack = e=>  {this.setRemoteTrack(e)}
             this.setState({peer1, localStream})
             this.offer(data)
@@ -150,18 +143,23 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
         this.socket.emit('message',message)
     }
     offer(data){
+        console.log("offer")
                 const {peer1} = this.state
                 peer1.createOffer().then(offer=>{
                     peer1.setLocalDescription(offer)
-                        .then(()=>{console.log("peer1 set local description success")})
+                        .then(()=>{
+                            console.log("peer1 set local description success")
+                        })})
                         .then(()=>{
                             this.sendMessage({
                                 name : this.state.teacherCode,
                                 target :data.studentCode,
                                 type : "offer",
                                 sdp : peer1.localDescription
-                            })
                         })
+                                .catch(e=>{
+                                    console.log(e)
+                                })
                 })
                 this.setState({peer1})
     }

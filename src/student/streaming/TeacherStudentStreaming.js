@@ -71,16 +71,15 @@ export class TeacherStudentStreaming extends React.Component {
                 })
                 .then(()=>{
                     peer.createAnswer().then(answer=>{
-                        peer.setLocalDescription(answer).then(()=>{
-                                    console.log(`peer1 send answer to ${message.teacherCode}`)
-                                    this.sendMessage({
-                                        name : this.state.studentCode,
-                                        target : message.teacherCode,
-                                        type : "answer",
-                                        sdp : peer.localDescription
-                        })
+                        peer.setLocalDescription(answer).then(()=>console.log('pc2 set remote description success'))})
+                        .then(()=>{
+                            this.sendMessage({
+                                name : this.state.studentCode,
+                                target : message.teacherCode,
+                                type : "answer",
+                                sdp : peer.localDescription
                             })
-                    })
+                        })
                 })
             this.setState({peer})
 
