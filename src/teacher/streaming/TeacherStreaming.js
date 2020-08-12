@@ -98,7 +98,8 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
             console.log('receive start offer message from server')
             let {peer1, localStream} = this.state
             peer1 = new RTCPeerConnection(this.state.config)
-            localStream.getTracks().forEach(track => peer1.addTrack(track,localStream))
+            navigator.mediaDevices.getUserMedia({video : true})
+                .then(stream=>{stream.getTracks().forEach(track => peer1.addTrack(track,localStream))})
             peer1.onicecandidate =  e => {this.iceCandidateHandler(e)}
             peer1.ontrack = e=>  {this.setRemoteTrack(e)}
             this.setState({peer1, localStream})

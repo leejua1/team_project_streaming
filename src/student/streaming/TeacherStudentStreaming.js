@@ -60,7 +60,9 @@ export class TeacherStudentStreaming extends React.Component {
             console.log("callee receive offer")
             let {peer} = this.state
             peer = new RTCPeerConnection(this.state.pcConfig)
-            this.state.localStream.getTracks().forEach(track=>peer.addTrack(track,this.state.localStream))
+        navigator.mediaDevices.getUserMedia({video : true})
+            .then(stream=>{
+                stream.getTracks().forEach(track=>peer.addTrack(track,stream))})
             peer.onicecandidate = (e)=>{this.iceCandidateHandler(e)}
             peer.ontrack = e =>{this.setRemoteTrack(e)}
             peer.setRemoteDescription(new RTCSessionDescription(message.sdp))
