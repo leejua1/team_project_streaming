@@ -72,7 +72,7 @@ export class TeacherStudentStreaming extends React.Component {
                 .then(()=>{
                     peer.createAnswer().then(answer=>{
                         peer.setLocalDescription(answer).then(()=>{
-                                    console.log(`peer1 send icecandidate to ${message.teacherCode}`)
+                                    console.log(`peer1 send answer to ${message.teacherCode}`)
                                     this.sendMessage({
                                         name : this.state.studentCode,
                                         target : message.teacherCode,
@@ -93,6 +93,7 @@ export class TeacherStudentStreaming extends React.Component {
     }
     iceCandidateHandler(e){
         if (e.candidate){
+            console.log(`peer1 send candidate to 100000103`)
             this.sendMessage({
                 name : this.state.studentCode,
                 type : "candidate",

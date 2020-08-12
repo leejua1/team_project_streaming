@@ -159,6 +159,7 @@ export class TeacherStreaming extends Component{ //필요한것... 수업코드,
                 this.setState({peer1})
     }
     iceCandidateHandler(e){
+        console.log(`caller send icecandidate message to 100018002`)
         if (e.candidate){
             this.sendMessage({
                 type : "candidate",
