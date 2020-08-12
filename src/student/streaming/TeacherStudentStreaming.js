@@ -41,7 +41,7 @@ export class TeacherStudentStreaming extends React.Component {
         navigator.mediaDevices.getUserMedia({video : true})
             .then(stream=>{
             this.localVideoRef.current.srcObject = stream
-            this.setState({localStream : stream})
+            this.setState({localStream : stream, localStreamAdded : true})
 
         })
         this.socket.emit('joinRoom', {roomName : this.state.classCode, code : this.state.studentCode})
@@ -59,8 +59,9 @@ export class TeacherStudentStreaming extends React.Component {
     handleOffer(message){
             console.log("callee receive offer")
             let {peer, localStream} = this.state
+        if (this.state.localStreamAdded){
             peer = new RTCPeerConnection(this.state.pcConfig)
-                localStream.getTracks().forEach(track=>peer.addTrack(track,localStream))
+            localStream.getTracks().forEach(track=>peer.addTrack(track,localStream))
             peer.onicecandidate = (e)=>{this.iceCandidateHandler(e)}
             peer.ontrack = e =>{this.setRemoteTrack(e)}
             peer.setRemoteDescription(new RTCSessionDescription(message.sdp))
@@ -80,6 +81,8 @@ export class TeacherStudentStreaming extends React.Component {
                         })
                 })
             this.setState({peer})
+        }
+
 
     }
     setRemoteTrack(e){
